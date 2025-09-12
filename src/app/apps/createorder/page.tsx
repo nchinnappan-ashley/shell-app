@@ -65,7 +65,7 @@ export default function CreateOrderPage() {
   const addRow = () => setRows((r) => [...r, { item: "", qty: 0, status: "" }]);
 
   return (
-    <ShellLayout suppressDefault>
+    <ShellLayout suppressDefault hideRightPanel>
       <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 py-6">
         {/* Header mimic */}

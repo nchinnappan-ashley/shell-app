@@ -104,6 +104,7 @@ export function MainContent() {
     ashleydirect: 'http://localhost:3001/apps/ashleydirect',
     // Use internal route for Create Order within the shell app
     createorder: '/apps/createorder',
+    inroute: '/apps/inroute',
   };
   const [forYouSpace, setForYouSpace] = useState<{ available: boolean; height: number }>({ available: false, height: 0 });
 
@@ -231,7 +232,7 @@ export function MainContent() {
   const [agentMessages, setAgentMessages] = useState<AgentMessage[]>([]);
 
   // Conversational agent: Ashley Direct order creation flow
-  type AgentMode = 'none' | 'createOrderAD';
+  type AgentMode = 'none' | 'createOrderAD' | 'inRouteAD';
   type OrderStep =
     | 'askCustomer'
     | 'askItems'
@@ -244,6 +245,8 @@ export function MainContent() {
     | 'done';
   const [agentMode, setAgentMode] = useState<AgentMode>('none');
   const [orderStep, setOrderStep] = useState<OrderStep | null>(null);
+  type InRouteStep = 'askCustomer' | 'done';
+  const [inRouteStep, setInRouteStep] = useState<InRouteStep | null>(null);
   const [orderDraft, setOrderDraft] = useState<{
     customerNumber: string;
     shipTo: string;
@@ -264,13 +267,176 @@ export function MainContent() {
     requestDate: ''
   });
 
+  // Persistent Create Order draft across navigation
+  const ORDER_DRAFT_KEY = 'oa_draft_create_order';
+  type CreateOrderDraftPersist = {
+    mode: AgentMode;
+    step: OrderStep | null;
+    order: {
+      customerNumber: string;
+      shipTo: string;
+      items: string[];
+      quantities: number[];
+      warehouse: string;
+      orderType: 'complete' | 'available';
+      shipMethod: 'delivery' | 'full' | 'express' | 'ltl';
+      requestDate: string;
+    };
+    messages: AgentMessage[];
+    startedAt: number;
+    updatedAt: number;
+  };
+  const saveDraft = () => {
+    if (typeof window === 'undefined') return;
+    try {
+      const prev = (() => { try { return JSON.parse(localStorage.getItem(ORDER_DRAFT_KEY) || 'null'); } catch { return null; } })();
+      const payload: CreateOrderDraftPersist = {
+        mode: agentMode,
+        step: orderStep,
+        order: orderDraft,
+        messages: agentMessages,
+        startedAt: prev?.startedAt ?? Date.now(),
+        updatedAt: Date.now(),
+      };
+      localStorage.setItem(ORDER_DRAFT_KEY, JSON.stringify(payload));
+      window.dispatchEvent(new Event('order-draft-updated'));
+    } catch {}
+  };
+  const loadDraft = (): CreateOrderDraftPersist | null => {
+    if (typeof window === 'undefined') return null;
+    try { return JSON.parse(localStorage.getItem(ORDER_DRAFT_KEY) || 'null'); } catch { return null; }
+  };
+  const clearDraft = () => {
+    if (typeof window === 'undefined') return;
+    try { localStorage.removeItem(ORDER_DRAFT_KEY); window.dispatchEvent(new Event('order-draft-updated')); } catch {}
+  };
+  const [resumeDraft, setResumeDraft] = useState<CreateOrderDraftPersist | null>(null);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const read = () => {
+      try {
+        const raw = localStorage.getItem(ORDER_DRAFT_KEY);
+        const d: CreateOrderDraftPersist | null = raw ? JSON.parse(raw) : null;
+        if (d && d.mode === 'createOrderAD' && d.step && d.step !== 'done') setResumeDraft(d);
+        else setResumeDraft(null);
+      } catch {
+        setResumeDraft(null);
+      }
+    };
+    read();
+    window.addEventListener('order-draft-updated', read as unknown as EventListener);
+    return () => window.removeEventListener('order-draft-updated', read as unknown as EventListener);
+  }, []);
+  useEffect(() => {
+    if (agentMode !== 'createOrderAD') return;
+    if (typeof window === 'undefined') return;
+    try {
+      const prev = (() => { try { return JSON.parse(localStorage.getItem(ORDER_DRAFT_KEY) || 'null'); } catch { return null; } })();
+      const payload: CreateOrderDraftPersist = {
+        mode: agentMode,
+        step: orderStep,
+        order: orderDraft,
+        messages: agentMessages,
+        startedAt: prev?.startedAt ?? Date.now(),
+        updatedAt: Date.now(),
+      };
+      localStorage.setItem(ORDER_DRAFT_KEY, JSON.stringify(payload));
+      window.dispatchEvent(new Event('order-draft-updated'));
+    } catch {}
+  }, [agentMode, orderStep, orderDraft, agentMessages]);
+  const resumeFromDraft = () => {
+    const d = loadDraft();
+    if (!d) return;
+    setAgentMode('createOrderAD');
+    setOrderStep(d.step);
+    setOrderDraft(d.order);
+    setAgentMessages(d.messages || []);
+    pushAssistant('Resumed your Create Order draft. You can continue where you left off.');
+    setResumeDraft(null);
+  };
+  const discardDraft = () => { clearDraft(); setResumeDraft(null); };
+
+
   const pushAssistant = (text: string) => setAgentMessages((m) => [...m, { role: 'assistant', content: text }]);
   const pushUser = (text: string) => setAgentMessages((m) => [...m, { role: 'user', content: text }]);
+
+  // Recent Activity: store hero-search submissions (not menu search)
+  const RECENT_KEY = 'oa_recent_acts';
+  type RecentAct = { id: string; text: string; ts: number; href?: string };
+  const addRecent = (entry: Omit<RecentAct, 'id' | 'ts'> & { ts?: number }) => {
+    try {
+      const raw = localStorage.getItem(RECENT_KEY);
+      const list: RecentAct[] = raw ? JSON.parse(raw) : [];
+      const item: RecentAct = { id: String(Date.now()) + Math.random().toString(36).slice(2), text: entry.text, href: entry.href, ts: entry.ts ?? Date.now() };
+      const next = [item, ...list].slice(0, 30);
+      localStorage.setItem(RECENT_KEY, JSON.stringify(next));
+      window.dispatchEvent(new CustomEvent('recent-activity', { detail: item }));
+    } catch {}
+  };
+  // Recent Activity (hero-search) — read list for on-page widget
+  const [heroRecents, setHeroRecents] = useState<RecentAct[]>([]);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const load = () => {
+      try { setHeroRecents(JSON.parse(localStorage.getItem(RECENT_KEY) || '[]')); }
+      catch { setHeroRecents([]); }
+    };
+    load();
+    const onRecent = () => load();
+    const onStorage = (e: StorageEvent) => { if (e.key === RECENT_KEY) load(); };
+    window.addEventListener('recent-activity', onRecent as EventListener);
+    window.addEventListener('storage', onStorage);
+    return () => {
+      window.removeEventListener('recent-activity', onRecent as EventListener);
+      window.removeEventListener('storage', onStorage);
+    };
+  }, []);
+
 
   const beginCreateOrderFlow = () => {
     setAgentMode('createOrderAD');
     setOrderStep('askCustomer');
     pushAssistant("Great — let's create an order in Ashley Direct. What is the customer number and ship-to? For example: 123456, 789012");
+    // Record a single draft activity and persist immediately
+    addRecent({ text: 'Create Order: started (draft)' });
+    saveDraft();
+  };
+
+  const beginInRouteFlow = () => {
+    setAgentMode('inRouteAD');
+    setInRouteStep('askCustomer');
+    pushAssistant('Okay — for In Route Orders, provide a customer number, optionally followed by a ship-to. Example: 8888300 or 8888300, 480');
+  };
+
+  const navToInRouteWithPreset = (params: URLSearchParams) => {
+    const base = externalRoutes['inroute'] ?? '/apps/inroute';
+    const url = `${base}?${params.toString()}`;
+    if (typeof window !== 'undefined') window.location.href = url; else router.push(url);
+  };
+
+  const handleInRouteInput = (input: string) => {
+    const q = input.trim();
+    const nums = q.match(/\d+/g) || [];
+    if (nums.length >= 2) {
+      const customer = String(nums[0]);
+      const shipTo = String(nums[1]);
+      const p = new URLSearchParams({ customer, shipTo });
+      addRecent({ text: `In Route Orders: customer ${customer}, ship-to ${shipTo}`, href: `/apps/inroute?customer=${customer}&shipTo=${shipTo}` });
+      pushAssistant('Showing trips in route for the provided ship-to. Redirecting...');
+      navToInRouteWithPreset(p);
+      setInRouteStep('done');
+      return;
+    }
+    if (nums.length >= 1) {
+      const customer = String(nums[0]);
+      const p = new URLSearchParams({ customer });
+      addRecent({ text: `In Route Orders: customer ${customer}`, href: `/apps/inroute?customer=${customer}` });
+      pushAssistant('Showing trips in route for the customer. Redirecting...');
+      navToInRouteWithPreset(p);
+      setInRouteStep('done');
+      return;
+    }
+    pushAssistant('Please provide a customer number, optionally followed by a ship-to. Example: 8888300 or 8888300, 480');
   };
 
   const navToAshleyDirectWithPreset = (params: URLSearchParams) => {
@@ -410,18 +576,31 @@ export function MainContent() {
     if (!q) return;
     // Show user message immediately
     pushUser(q);
+    // Record in recent activity for home sidebar
+    addRecent({ text: q });
 
-    // If we're already in the order flow, handle this step
+    // If we're already in a flow, handle this step
     if (agentMode === 'createOrderAD' && orderStep) {
       handleOrderInput(q);
       setQuery('');
       return;
     }
+    if (agentMode === 'inRouteAD' && inRouteStep) {
+      handleInRouteInput(q);
+      setQuery('');
+      return;
+    }
 
-    // Intent: start conversational order creation
+    // Intent: start conversational flows
     const isCreateOrderFlow = /(order entry|create my order|create\s+order|new\s+order)/i.test(q);
     if (isCreateOrderFlow) {
       beginCreateOrderFlow();
+      setQuery('');
+      return;
+    }
+    const isInRouteFlow = /(in\s*route\s*orders?|inroute\s*orders?|in\s*route\s*order|trips?\s*in\s*route)/i.test(q);
+    if (isInRouteFlow) {
+      beginInRouteFlow();
       setQuery('');
       return;
     }
@@ -461,6 +640,7 @@ export function MainContent() {
       const q = String(t).trim();
       setQuery(q);
       const match = findBestApp(q);
+
       if (match) go(match.id);
     };
     rec.onerror = () => setListening(false);
@@ -481,8 +661,9 @@ export function MainContent() {
         </p>
 
         {/* Main Search Card (new design) */}
-        <div className="max-w-3xl mx-auto mb-8">
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-lg p-4">
+        <div className="mb-8 flex justify-center gap-6">
+          <div className="w-full max-w-3xl">
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-lg p-4">
             {/* Top toolbar with arrows and metrics */}
             <div className="flex items-center justify-between gap-3 px-1">
               <button type="button" className="w-9 h-9 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center">
@@ -505,6 +686,7 @@ export function MainContent() {
               <button type="button" className="w-9 h-9 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center">
                 <ArrowRightIcon className="w-5 h-5" />
               </button>
+
             </div>
 
             {/* Input row */}
@@ -516,6 +698,7 @@ export function MainContent() {
                   data-testid="hero-search"
                   placeholder="I'm your AI-powered business companion that connects all Ashley systems and automates workflows across departments. What would you like to accomplish?"
                   value={query}
+
                   onChange={onChangeQuery}
                   onKeyDown={onKeyDown}
                   className="block w-full min-h-20 px-5 pr-28 py-3 text-[15px] leading-6 text-gray-900 placeholder-gray-400 bg-transparent border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--ring)] resize-none overflow-hidden"
@@ -533,6 +716,20 @@ export function MainContent() {
                   </button>
                 </div>
               </div>
+
+                {/* Resume Create Order draft banner */}
+                {resumeDraft && agentMode === 'none' && (
+                  <div className="mt-3 flex items-center justify-between rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-amber-900">
+                    <div className="text-sm">
+                      Create Order draft in progress  last updated {new Date(resumeDraft.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                    <div className="flex gap-2">
+                      <button type="button" onClick={resumeFromDraft} className="px-3 py-1 rounded-md bg-amber-600 text-white text-xs hover:bg-amber-700">Resume</button>
+                      <button type="button" onClick={discardDraft} className="px-3 py-1 rounded-md border border-amber-300 bg-white text-amber-800 text-xs hover:bg-amber-100">Discard</button>
+                    </div>
+                  </div>
+                )}
+
 
               {/* Suggestions dropdown */}
               {filtered.length > 0 && (
@@ -582,6 +779,7 @@ export function MainContent() {
               )}
 
 
+
               {/* Bottom row */}
               <div className="mt-3 flex items-center justify-between">
                 <button type="button" className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-sm">
@@ -593,6 +791,38 @@ export function MainContent() {
               </div>
             </div>
           </div>
+          </div>
+
+        {/* Right of hero-search: Recent Activity */}
+        <aside className="hidden xl:block w-80 shrink-0">
+          <section className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-semibold text-gray-900">Recent Activity</h3>
+              {heroRecents.length > 0 && (
+                <button type="button" className="text-[11px] text-indigo-600 hover:underline"
+                  onClick={() => { localStorage.removeItem(RECENT_KEY); setHeroRecents([]); }}>Clear</button>
+              )}
+            </div>
+            {heroRecents.length === 0 ? (
+              <div className="text-xs text-gray-500 mt-2">No recent items yet. Try the big search box to get started.</div>
+            ) : (
+              <ul className="mt-2 divide-y divide-gray-100">
+                {heroRecents.slice(0, 6).map(r => (
+                  <li key={r.id} className="py-2 text-[13px] flex items-start gap-2">
+                    <span className="mt-1 inline-block w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                    {r.href ? (
+                      <a href={r.href} className="flex-1 text-indigo-600 hover:underline break-words">{r.text}</a>
+                    ) : (
+                      <span className="flex-1 text-gray-800 break-words">{r.text}</span>
+                    )}
+                    <span className="ml-2 shrink-0 text-[10px] text-gray-500">{new Date(r.ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        </aside>
+
         </div>
 
 
@@ -618,6 +848,7 @@ export function MainContent() {
                   )}
                   <div className="w-12 h-12 rounded-lg brand-soft brand-text flex items-center justify-center mb-3">
                     <IconComponent className="w-6 h-6" />
+
                   </div>
                   <h3 className="font-medium text-gray-900 mb-1">{agent.name}</h3>
                   <p className="text-sm text-gray-500">{agent.description}</p>
@@ -626,6 +857,7 @@ export function MainContent() {
             })}
           </div>
         )}
+
         {/* Quick actions */}
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
           <button type="button" className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-gray-200 shadow-sm text-gray-700 hover:bg-gray-50">
@@ -650,59 +882,6 @@ export function MainContent() {
           </button>
         </div>
 
-        {/* Recents (table) */}
-        <section className="mt-6">
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="px-5 pt-5 pb-3">
-              <h3 className="text-base font-semibold text-gray-900">Recents</h3>
-            </div>
-            <div className="px-5 pb-5 overflow-x-auto">
-              <table className="w-full table-fixed text-sm">
-                <thead>
-                  <tr className="text-left text-gray-500">
-                    <th className="w-[45%] pb-2 font-medium">Name</th>
-                    <th className="w-[18%] pb-2 font-medium">Type</th>
-                    <th className="w-[17%] pb-2 font-medium">Status</th>
-                    <th className="w-[12%] pb-2 font-medium">Created By</th>
-                    <th className="w-[18%] pb-2 font-medium">Modified On</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recents.map((r, i) => {
-                    const Icon = TYPE_ICON[r.type];
-                    return (
-                      <tr key={i} className="border-t border-gray-100">
-                        <td className="py-3 pr-4">
-                          <button
-                            type="button"
-                            onClick={() => { if (r.href) router.push(r.href); }}
-                            className="text-indigo-600 hover:text-indigo-700 font-medium"
-                          >
-                            {r.name}
-                          </button>
-                        </td>
-                        <td className="py-3">
-                          <span className="inline-flex items-center gap-2 text-gray-700">
-                            <Icon className="w-4 h-4 text-gray-400" />
-                            {r.type}
-                          </span>
-                        </td>
-                        <td className="py-3">
-                          <span className="inline-flex items-center gap-2 text-gray-700">
-                            <span className={`inline-block w-1.5 h-1.5 rounded-full ${STATUS_DOT[r.status] || 'bg-gray-300'}`} />
-                            {r.status}
-                          </span>
-                        </td>
-                        <td className="py-3 text-gray-600">{r.createdBy}</td>
-                        <td className="py-3 text-gray-600">{r.modifiedOn}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
 
 
         {/* For You Section - Feather fan on scroll */}

@@ -11,6 +11,7 @@ __turbopack_context__.s([
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$data$2f$ashleydirect$2d$menus$2e$json__$28$json$29$__ = __turbopack_context__.i("[project]/src/data/ashleydirect-menus.json (json)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$24$2f$solid$2f$esm$2f$StarIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__StarIcon$3e$__ = __turbopack_context__.i("[project]/node_modules/@heroicons/react/24/solid/esm/StarIcon.js [app-client] (ecmascript) <export default as StarIcon>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$24$2f$outline$2f$esm$2f$StarIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__StarIcon$3e$__ = __turbopack_context__.i("[project]/node_modules/@heroicons/react/24/outline/esm/StarIcon.js [app-client] (ecmascript) <export default as StarIcon>");
@@ -27,6 +28,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$
 ;
 var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature(), _s2 = __turbopack_context__.k.signature();
 "use client";
+;
 ;
 ;
 ;
@@ -128,7 +130,7 @@ function SectionHeader(param) {
                 children: icon
             }, void 0, false, {
                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                lineNumber: 56,
+                lineNumber: 57,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -139,13 +141,13 @@ function SectionHeader(param) {
                 children: title
             }, void 0, false, {
                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                lineNumber: 59,
+                lineNumber: 60,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-        lineNumber: 55,
+        lineNumber: 56,
         columnNumber: 5
     }, this);
 }
@@ -161,7 +163,7 @@ function ItemChip(param) {
                 children: item.name
             }, void 0, false, {
                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                lineNumber: 67,
+                lineNumber: 68,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -169,7 +171,7 @@ function ItemChip(param) {
                 children: item.group
             }, void 0, false, {
                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                lineNumber: 68,
+                lineNumber: 69,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -194,29 +196,29 @@ function ItemChip(param) {
                         className: "w-3.5 h-3.5"
                     }, void 0, false, {
                         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                        lineNumber: 78,
+                        lineNumber: 79,
                         columnNumber: 25
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$24$2f$outline$2f$esm$2f$StarIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__StarIcon$3e$__["StarIcon"], {
                         className: "w-3.5 h-3.5"
                     }, void 0, false, {
                         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                        lineNumber: 78,
+                        lineNumber: 79,
                         columnNumber: 64
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                    lineNumber: 70,
+                    lineNumber: 71,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                lineNumber: 69,
+                lineNumber: 70,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-        lineNumber: 66,
+        lineNumber: 67,
         columnNumber: 5
     }, this);
 }
@@ -318,9 +320,16 @@ function AshleyDirectMenus() {
     }["AshleyDirectMenus.useMemo[groupedAll]"], [
         flat
     ]);
+    const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     const onOpen = (it)=>{
         markUsed(it.key);
-        // No URL available; act as placeholder action for now
+        const name = it.name.toLowerCase();
+        // Redirect to Create Order sample screen
+        if (name.includes("order entry") || name.includes("create my order") || name.includes("create order")) {
+            router.push("/apps/createorder");
+            return;
+        }
+        // Placeholder for other menus
         console.log("Open", it);
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -335,7 +344,7 @@ function AshleyDirectMenus() {
                                 className: "absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                lineNumber: 153,
+                                lineNumber: 161,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -346,13 +355,13 @@ function AshleyDirectMenus() {
                                 className: "w-full pl-9 pr-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--ring)] focus:border-transparent"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                lineNumber: 154,
+                                lineNumber: 162,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                        lineNumber: 152,
+                        lineNumber: 160,
                         columnNumber: 9
                     }, this),
                     q && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -363,13 +372,13 @@ function AshleyDirectMenus() {
                                     className: "w-4 h-4"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                    lineNumber: 164,
+                                    lineNumber: 172,
                                     columnNumber: 34
                                 }, void 0),
                                 title: "Search results (".concat(searchResults.length, ")")
                             }, void 0, false, {
                                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                lineNumber: 164,
+                                lineNumber: 172,
                                 columnNumber: 13
                             }, this),
                             searchResults.length ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -381,31 +390,31 @@ function AshleyDirectMenus() {
                                         onToggleBookmark: ()=>toggleBookmark(it.key)
                                     }, it.key, false, {
                                         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                        lineNumber: 168,
+                                        lineNumber: 176,
                                         columnNumber: 19
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                lineNumber: 166,
+                                lineNumber: 174,
                                 columnNumber: 15
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "text-sm text-gray-500",
                                 children: "No matches found."
                             }, void 0, false, {
                                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                lineNumber: 172,
+                                lineNumber: 180,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                        lineNumber: 163,
+                        lineNumber: 171,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                lineNumber: 151,
+                lineNumber: 159,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -415,13 +424,13 @@ function AshleyDirectMenus() {
                             className: "w-4 h-4"
                         }, void 0, false, {
                             fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                            lineNumber: 179,
+                            lineNumber: 187,
                             columnNumber: 30
                         }, void 0),
                         title: "Recently used"
                     }, void 0, false, {
                         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                        lineNumber: 179,
+                        lineNumber: 187,
                         columnNumber: 9
                     }, this),
                     recentItems.length ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -433,25 +442,25 @@ function AshleyDirectMenus() {
                                 onToggleBookmark: ()=>toggleBookmark(it.key)
                             }, it.key, false, {
                                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                lineNumber: 183,
+                                lineNumber: 191,
                                 columnNumber: 15
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                        lineNumber: 181,
+                        lineNumber: 189,
                         columnNumber: 11
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "text-sm text-gray-500",
                         children: "No recent items yet. Use a menu to see it here."
                     }, void 0, false, {
                         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                        lineNumber: 187,
+                        lineNumber: 195,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                lineNumber: 178,
+                lineNumber: 186,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -461,13 +470,13 @@ function AshleyDirectMenus() {
                             className: "w-4 h-4"
                         }, void 0, false, {
                             fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                            lineNumber: 193,
+                            lineNumber: 201,
                             columnNumber: 30
                         }, void 0),
                         title: "Bookmarked"
                     }, void 0, false, {
                         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                        lineNumber: 193,
+                        lineNumber: 201,
                         columnNumber: 9
                     }, this),
                     bookmarkedItems.length ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -479,25 +488,25 @@ function AshleyDirectMenus() {
                                 onToggleBookmark: ()=>toggleBookmark(it.key)
                             }, it.key, false, {
                                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                lineNumber: 197,
+                                lineNumber: 205,
                                 columnNumber: 15
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                        lineNumber: 195,
+                        lineNumber: 203,
                         columnNumber: 11
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "text-sm text-gray-500",
                         children: "No bookmarks yet. Click the star on any menu to add it."
                     }, void 0, false, {
                         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                        lineNumber: 201,
+                        lineNumber: 209,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                lineNumber: 192,
+                lineNumber: 200,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -507,13 +516,13 @@ function AshleyDirectMenus() {
                             className: "w-4 h-4"
                         }, void 0, false, {
                             fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                            lineNumber: 207,
+                            lineNumber: 215,
                             columnNumber: 30
                         }, void 0),
                         title: "All menus"
                     }, void 0, false, {
                         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                        lineNumber: 207,
+                        lineNumber: 215,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -533,12 +542,12 @@ function AshleyDirectMenus() {
                                                     className: "w-4 h-4"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                                    lineNumber: 216,
+                                                    lineNumber: 224,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                                lineNumber: 215,
+                                                lineNumber: 223,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -546,13 +555,13 @@ function AshleyDirectMenus() {
                                                 children: group
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                                lineNumber: 218,
+                                                lineNumber: 226,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                        lineNumber: 214,
+                                        lineNumber: 222,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -569,7 +578,7 @@ function AshleyDirectMenus() {
                                                                 children: it.name
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                                                lineNumber: 228,
+                                                                lineNumber: 236,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -577,13 +586,13 @@ function AshleyDirectMenus() {
                                                                 children: it.group
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                                                lineNumber: 229,
+                                                                lineNumber: 237,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                                        lineNumber: 227,
+                                                        lineNumber: 235,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -592,12 +601,12 @@ function AshleyDirectMenus() {
                                                             className: "w-5 h-5"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                                            lineNumber: 232,
+                                                            lineNumber: 240,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                                        lineNumber: 231,
+                                                        lineNumber: 239,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -622,65 +631,66 @@ function AshleyDirectMenus() {
                                                                 className: "w-3.5 h-3.5"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                                                lineNumber: 243,
+                                                                lineNumber: 251,
                                                                 columnNumber: 57
                                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$24$2f$outline$2f$esm$2f$StarIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__StarIcon$3e$__["StarIcon"], {
                                                                 className: "w-3.5 h-3.5"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                                                lineNumber: 243,
+                                                                lineNumber: 251,
                                                                 columnNumber: 96
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                                            lineNumber: 235,
+                                                            lineNumber: 243,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                                        lineNumber: 234,
+                                                        lineNumber: 242,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, it.key, true, {
                                                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                                lineNumber: 222,
+                                                lineNumber: 230,
                                                 columnNumber: 21
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                        lineNumber: 220,
+                                        lineNumber: 228,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, group, true, {
                                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                                lineNumber: 213,
+                                lineNumber: 221,
                                 columnNumber: 15
                             }, this);
                         })
                     }, void 0, false, {
                         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                        lineNumber: 208,
+                        lineNumber: 216,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-                lineNumber: 206,
+                lineNumber: 214,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/departments/AshleyDirectMenus.tsx",
-        lineNumber: 149,
+        lineNumber: 157,
         columnNumber: 5
     }, this);
 }
-_s2(AshleyDirectMenus, "zyy+8t62kuAWs7IrTkHHvqkwElM=", false, function() {
+_s2(AshleyDirectMenus, "qc6jT/aGIhw9sZkL/DetmtGMWeg=", false, function() {
     return [
         useLocalMap,
-        useLocalSet
+        useLocalSet,
+        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"]
     ];
 });
 _c2 = AshleyDirectMenus;
