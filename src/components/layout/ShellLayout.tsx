@@ -16,9 +16,10 @@ const AshleyDirectMenus = dynamic(() => import('../departments/AshleyDirectMenus
 interface ShellLayoutProps {
   children?: React.ReactNode;
   initialSelectedDepartment?: string | null;
+  suppressDefault?: boolean; // when true, do not render MainContent/department, only children
 }
 
-export function ShellLayout({ children, initialSelectedDepartment = null }: ShellLayoutProps) {
+export function ShellLayout({ children, initialSelectedDepartment = null, suppressDefault = false }: ShellLayoutProps) {
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(initialSelectedDepartment);
   const [historyOpen, setHistoryOpen] = useState(false);
 
@@ -38,29 +39,31 @@ export function ShellLayout({ children, initialSelectedDepartment = null }: Shel
           <div className="h-full flex">
             {/* Primary content area */}
             <div className="flex-1 overflow-auto">
-              {selectedDepartment ? (
-                <div className="h-full">
-                  {/* This is where remote microfrontends will be loaded */}
-                  <div className="p-6 space-y-4">
-                    <h2 className="text-2xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700">
-                      {selectedDepartment === 'ashleydirect' ? 'Ashley Direct' : (selectedDepartment.charAt(0).toUpperCase() + selectedDepartment.slice(1))} Department
-                    </h2>
+              {!suppressDefault && (
+                selectedDepartment ? (
+                  <div className="h-full">
+                    {/* This is where remote microfrontends will be loaded */}
+                    <div className="p-6 space-y-4">
+                      <h2 className="text-2xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700">
+                        {selectedDepartment === 'ashleydirect' ? 'Ashley Direct' : (selectedDepartment.charAt(0).toUpperCase() + selectedDepartment.slice(1))} Department
+                      </h2>
 
-                    {/* Department intro sections */}
-                    {selectedDepartment === 'ashleydirect' && (
-                      <>
-                        <AshleyDirectInfo />
-                        <AshleyDirectMenus />
-                      </>
-                    )}
+                      {/* Department intro sections */}
+                      {selectedDepartment === 'ashleydirect' && (
+                        <>
+                          <AshleyDirectInfo />
+                          <AshleyDirectMenus />
+                        </>
+                      )}
 
-                    <p className="text-gray-600">
-                      Loading {selectedDepartment} application...
-                    </p>
+                      <p className="text-gray-600">
+                        Loading {selectedDepartment} application...
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <MainContent />
+                ) : (
+                  <MainContent />
+                )
               )}
               {children}
             </div>

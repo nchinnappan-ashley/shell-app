@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import data from "@/data/ashleydirect-menus.json";
 import { StarIcon as StarSolid } from "@heroicons/react/24/solid";
 import { StarIcon, ClockIcon, Squares2X2Icon, MagnifyingGlassIcon, Cog6ToothIcon, LinkIcon, ShoppingCartIcon, WrenchScrewdriverIcon, DocumentTextIcon, TagIcon, ChartBarIcon } from "@heroicons/react/24/outline";
@@ -139,9 +140,16 @@ export default function AshleyDirectMenus() {
     return groups;
   }, [flat]);
 
+  const router = useRouter();
   const onOpen = (it: FlatItem) => {
     markUsed(it.key);
-    // No URL available; act as placeholder action for now
+    const name = it.name.toLowerCase();
+    // Redirect to Create Order sample screen
+    if (name.includes("order entry") || name.includes("create my order") || name.includes("create order")) {
+      router.push("/apps/createorder");
+      return;
+    }
+    // Placeholder for other menus
     console.log("Open", it);
   };
 
