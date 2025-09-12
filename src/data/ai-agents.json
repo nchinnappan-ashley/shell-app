@@ -1,0 +1,13 @@
+[
+  { "id": "ai-slides",    "name": "AI Slides",    "description": "Create presentations",        "icon": "PresentationChartLineIcon" },
+  { "id": "ai-sheets",    "name": "AI Sheets",    "description": "Spreadsheet analysis",         "icon": "TableCellsIcon" },
+  { "id": "ai-chat",      "name": "AI Chat",      "description": "Conversational AI",             "icon": "ChatBubbleLeftRightIcon", "isHot": true },
+  { "id": "ai-documents", "name": "AI Documents", "description": "Document processing",           "icon": "DocumentTextIcon", "isNew": true },
+  { "id": "ai-analytics", "name": "AI Analytics", "description": "Data insights",                  "icon": "ChartBarIcon" },
+  { "id": "ai-code",      "name": "AI Code",      "description": "Code generation",               "icon": "CodeBracketIcon" },
+  { "id": "ai-images",    "name": "AI Images",    "description": "Image generation",              "icon": "PhotoIcon" },
+  { "id": "ai-video",     "name": "AI Video",     "description": "Video creation",                "icon": "VideoCameraIcon" },
+  { "id": "ai-voice",     "name": "AI Voice",     "description": "Voice synthesis",               "icon": "MicrophoneIcon" },
+  { "id": "ai-agents",    "name": "AI Agents",    "description": "Custom agents",                 "icon": "SparklesIcon" }
+]
+

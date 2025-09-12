@@ -1,0 +1,151 @@
+[
+  {
+    "id": 1,
+    "Name": "Admin",
+    "URL": null,
+    "SubMenuItems": [
+      { "id": 1, "Name": "Account Administration", "KeyWords": "Administration,Account,Password,Reset" },
+      { "id": 2, "Name": "TSA Maintenance Admin", "KeyWords": "TSA,Admin,Approve,Deny" },
+      { "id": 3, "Name": "Site News Maintenance", "KeyWords": "News,SiteNews,Site" }
+    ],
+    "IsMFEntry": false,
+    "MfEntryRoute": null
+  },
+  {
+    "id": 2,
+    "Name": "HotLinks",
+    "URL": null,
+    "SubMenuItems": [
+      { "id": 1, "Name": "Ad Notice", "KeyWords": "Ad Notice,AN" },
+      { "id": 2, "Name": "OneSource", "KeyWords": "OneSource,One Source,OS" },
+      { "id": 3, "Name": "Approve Credit Requests", "KeyWords": "Approve Credit Requests" },
+      { "id": 4, "Name": "Associate Maintenance", "KeyWords": "Associate Maintenance" },
+      { "id": 5, "Name": "Business Materials", "KeyWords": "Business Materials" },
+      { "id": 6, "Name": "CA Email Maintenance", "KeyWords": "CA Email Maintenance" },
+      { "id": 7, "Name": "Consumer Choice Report", "KeyWords": "Consumer Choice Report" },
+      { "id": 8, "Name": "Consumer Talk Back", "KeyWords": "Consumer Talk Back" },
+      { "id": 9, "Name": "Contact Us Reports", "KeyWords": "Contact Us Reports" },
+      { "id": 10, "Name": "Current Orders Report", "KeyWords": "Current Orders Report" },
+      { "id": 11, "Name": "Customer Ownership Exceptions", "KeyWords": "Customer Ownership Exceptions" },
+      { "id": 12, "Name": "Customer Summary By Territory", "KeyWords": "Customer Summary By Territory" },
+      { "id": 13, "Name": "Item Summary By Territory", "KeyWords": "Item Summary By Territory" },
+      { "id": 14, "Name": "Territory Summary By Region", "KeyWords": "Territory Summary By Region" },
+      { "id": 15, "Name": "Custom Set Maintenance", "KeyWords": "Custom Set Maintenance" },
+      { "id": 16, "Name": "Daily Order Mode", "KeyWords": "Daily Order Mode" },
+      { "id": 17, "Name": "Daily Order Status", "KeyWords": "Daily Order Status" },
+      { "id": 18, "Name": "Extracts", "KeyWords": "Extracts" },
+      { "id": 19, "Name": "Form Maintenance", "KeyWords": "Form Maintenance" },
+      { "id": 20, "Name": "Hang Tag Access", "KeyWords": "Hang Tag Access" },
+      { "id": 21, "Name": "Hang Tag Maintenance", "KeyWords": "Hang Tag Maintenance" },
+      { "id": 22, "Name": "HomeStore POP Tags", "KeyWords": "HomeStore POP Tags" },
+      { "id": 23, "Name": "Market Commit Update", "KeyWords": "Market Commit Update" },
+      { "id": 24, "Name": "Market Commitment Admin", "KeyWords": "Market Commitment Admin" },
+      { "id": 25, "Name": "Market Commitment Input", "KeyWords": "Market Commitment Input" },
+      { "id": 26, "Name": "Market Commitment Summary", "KeyWords": "Market Commitment Summary" },
+      { "id": 27, "Name": "Market Commitments", "KeyWords": "Market Commitments" },
+      { "id": 28, "Name": "New Shipto", "KeyWords": "New Shipto" },
+      { "id": 29, "Name": "Credits", "KeyWords": "Credits" }
+    ]
+  },
+  {
+    "id": 3,
+    "Name": "Orders",
+    "URL": null,
+    "SubMenuItems": [
+      { "id": 1, "Name": "Check On My Order", "KeyWords": "Check On My Order,Open Orders" },
+      { "id": 2, "Name": "Create My Order", "KeyWords": "Create My Order,Order Entry,OE" },
+      { "id": 3, "Name": "Change My Order", "KeyWords": "Change My Order, order maintenance" },
+      { "id": 4, "Name": "Display My Changes", "KeyWords": "Display My Changes" },
+      { "id": 5, "Name": "In Route Orders", "KeyWords": "In Route Orders" },
+      { "id": 6, "Name": "Delivery Status", "KeyWords": "Delivery Status" },
+      { "id": 7, "Name": "Trip Summary", "KeyWords": "Trip Summary" }
+    ],
+    "IsMFEntry": false,
+    "MfEntryRoute": null
+  },
+  {
+    "id": 4,
+    "Name": "Replacement Parts",
+    "URL": null,
+    "SubMenuItems": [
+      { "id": 1, "Name": "Check My Parts Order", "KeyWords": "Check My Parts Order,RP,Replacement Parts" },
+      { "id": 2, "Name": "Create My Parts Order", "KeyWords": "Create My Parts Order,RP,Replacement Parts" },
+      { "id": 3, "Name": "Find Parts On Order", "KeyWords": "Find Parts On Order,RP,Replacement Parts" },
+      { "id": 4, "Name": "RP Invoice Report", "KeyWords": "Replacement Parts Invoices Report,RP,Replacement Parts" }
+    ],
+    "IsMFEntry": false,
+    "MfEntryRoute": null
+  },
+  {
+    "id": 5,
+    "Name": "Invoices",
+    "URL": null,
+    "SubMenuItems": [
+      { "id": 1, "Name": "Open Invoices/Credits", "KeyWords": "Open Invoices/Credits" },
+      { "id": 2, "Name": "YTD Invoices/Credits", "KeyWords": "YTD Invoices/Credits" },
+      { "id": 3, "Name": "E-Payment", "KeyWords": "E-Payment,EPay" },
+      { "id": 4, "Name": "Analyst Report", "KeyWords": "Analyst Report" },
+      { "id": 5, "Name": "Credits", "KeyWords": "Credits" },
+      { "id": 6, "Name": "Approve Credit Requests", "KeyWords": "Approve Credit Requests" },
+      { "id": 7, "Name": "Ad Funds", "KeyWords": "Ad Funds" }
+    ],
+    "IsMFEntry": false,
+    "MfEntryRoute": null
+  },
+  {
+    "id": 6,
+    "Name": "Items",
+    "URL": null,
+    "SubMenuItems": [
+      { "id": 1, "Name": "Wish List", "KeyWords": "WishList" },
+      { "id": 2, "Name": "Customer Program", "KeyWords": "Customer Program Download" },
+      { "id": 4, "Name": "Item/Series Availability", "KeyWords": "Item/Series Availability,Item Status,inventory,stock,atp" },
+      { "id": 6, "Name": "Pricing by Item/Series", "KeyWords": "Pricing by Item/Series" },
+      { "id": 7, "Name": "My SKU 2.0", "KeyWords": "My SKUs,Item Cross Reference,MY SKU 2.0" },
+      { "id": 8, "Name": "Custom Set Maintenance", "KeyWords": "Custom Set Maintenance,packages,kits" },
+      { "id": 9, "Name": "Price Lists", "KeyWords": "Price Lists" },
+      { "id": 10, "Name": "Product Catalog", "KeyWords": "Product Catalog" },
+      { "id": 11, "Name": "Product Comments", "KeyWords": "Product Comments" },
+      { "id": 12, "Name": "Product Downloads", "KeyWords": "Product Downloads,images,photos,photography,jpg,jpeg,png" },
+      { "id": 13, "Name": "Product Drawings", "KeyWords": "Product Drawings" },
+      { "id": 14, "Name": "Product Knowledge Modules and Repair Instructions", "KeyWords": "Product Knowledge Modules and Repair Instructions" },
+      { "id": 15, "Name": "Product Status Report", "KeyWords": "Product Status Report" },
+      { "id": 16, "Name": "Top Sellers", "KeyWords": "Top Sellers" },
+      { "id": 17, "Name": "Hot Buys", "KeyWords": "Hot Buys" },
+      { "id": 18, "Name": "Hang Tag Access", "KeyWords": "Hang Tag Access" },
+      { "id": 19, "Name": "Hang Tag Maintenance", "KeyWords": "Hang Tag Maintenance" },
+      { "id": 20, "Name": "HomeStore POP Tags", "KeyWords": "HomeStore POP Tags" },
+      { "id": 21, "Name": "ATP Upload", "KeyWords": "Upload,ATP,Excel" },
+      { "id": 22, "Name": "Presentation System", "KeyWords": "Presentation System" }
+    ],
+    "IsMFEntry": false,
+    "MfEntryRoute": null
+  },
+  {
+    "id": 7,
+    "Name": "Reports",
+    "URL": null,
+    "SubMenuItems": [
+      { "id": 1, "Name": "Closed Store Report", "KeyWords": "Closed Store" },
+      { "id": 2, "Name": "Daily Order Mode", "KeyWords": "Daily Order Mode" },
+      { "id": 3, "Name": "Daily Order Status", "KeyWords": "Daily Order Status" },
+      { "id": 4, "Name": "Open Order Report", "KeyWords": "Open Order Report" },
+      { "id": 5, "Name": "Invoices", "KeyWords": "Invoices" },
+      { "id": 6, "Name": "Sales History", "KeyWords": "Sales History" },
+      { "id": 7, "Name": "Sales History 2.0", "KeyWords": "Sales History" },
+      { "id": 8, "Name": "Sales Dashboard", "KeyWords": "Sales Dashboard" },
+      { "id": 9, "Name": "Current Orders Report", "KeyWords": "Current Orders Report" },
+      { "id": 10, "Name": "Team Commissions", "KeyWords": "Team Commissions" },
+      { "id": 11, "Name": "Commissions", "KeyWords": "Commissions" },
+      { "id": 12, "Name": "Consumer Choice Report", "KeyWords": "Consumer Choice Report,placements" },
+      { "id": 13, "Name": "Extracts", "KeyWords": "Extracts" },
+      { "id": 14, "Name": "Weekly Order Wrap Up", "KeyWords": "Weekly Order Wrap Up" },
+      { "id": 15, "Name": "Unsubmitted Order Report", "KeyWords": "Unsubmitted Order Report" },
+      { "id": 16, "Name": "Dealer Marketing Profile", "KeyWords": "Dealer Marketing Profile" },
+      { "id": 17, "Name": "more...", "KeyWords": "more..." }
+    ],
+    "IsMFEntry": false,
+    "MfEntryRoute": null
+  }
+]
+

@@ -1,0 +1,13 @@
+[
+  { "id": "ashleydirect",   "title": "Ashley Direct",    "image": "", "icon": "Squares2X2Icon",     "accentStart": "#fef3c7", "accentEnd": "#fde68a" },
+  { "id": "ashleynet",      "title": "Ashley Net",       "image": "", "icon": "BuildingOfficeIcon", "accentStart": "#e0f2fe", "accentEnd": "#bae6fd" },
+  { "id": "supplier",       "title": "Supplier",          "image": "", "icon": "TruckIcon",          "accentStart": "#ede9fe", "accentEnd": "#ddd6fe" },
+  { "id": "hr",             "title": "HR",                "image": "", "icon": "UserGroupIcon",      "accentStart": "#dcfce7", "accentEnd": "#bbf7d0" },
+  { "id": "payroll",        "title": "Payroll",           "image": "", "icon": "CurrencyDollarIcon", "accentStart": "#ccfbf1", "accentEnd": "#99f6e4" },
+  { "id": "finance",        "title": "Finance",           "image": "", "icon": "ChartBarIcon",       "accentStart": "#fee2e2", "accentEnd": "#fecaca" },
+  { "id": "transportation", "title": "Transportation",    "image": "", "icon": "TruckIcon",          "accentStart": "#ffedd5", "accentEnd": "#fed7aa" },
+  { "id": "as400",          "title": "AS400",             "image": "", "icon": "ServerIcon",         "accentStart": "#e5e7eb", "accentEnd": "#d1d5db" },
+  { "id": "highjump",       "title": "High Jump",         "image": "", "icon": "CubeIcon",           "accentStart": "#e0e7ff", "accentEnd": "#c7d2fe" },
+  { "id": "moreapps",       "title": "More Apps",         "image": "", "icon": "SquaresPlusIcon",    "accentStart": "#f5f3ff", "accentEnd": "#ede9fe" }
+]
+
