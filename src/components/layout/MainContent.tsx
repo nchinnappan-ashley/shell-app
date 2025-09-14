@@ -653,7 +653,7 @@ export function MainContent() {
       {/* Hero Section */}
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Hi Wanek, Cameron . Welcome to One Ashley Super Agent
+          Welcome to One Ashley Super Agent
         </h1>
 
         <p className="text-lg text-gray-700 mb-8">
@@ -696,7 +696,7 @@ export function MainContent() {
                   ref={textRef}
                   rows={3}
                   data-testid="hero-search"
-                  placeholder="I'm your AI-powered business companion that connects all Ashley systems and automates workflows across departments. What would you like to accomplish?"
+                  placeholder="Hey Wanek, Cameron how can I help you"
                   value={query}
 
                   onChange={onChangeQuery}
