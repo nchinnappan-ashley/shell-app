@@ -206,7 +206,7 @@ export default function ChatDock() {
               <div className="w-7 h-7 rounded-lg brand-soft brand-text flex items-center justify-center">
                 <SparklesIcon className="w-4 h-4" />
               </div>
-              <div className="text-sm font-semibold text-gray-900">Ashley AI</div>
+              <div className="text-sm font-semibold text-gray-900">Ashley Knowledge Base</div>
             </div>
             <button onClick={() => setOpen(false)} className="p-1 rounded hover:bg-gray-100">
               <XMarkIcon className="w-5 h-5 text-gray-500" />
@@ -276,7 +276,7 @@ export default function ChatDock() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); send(); } }}
-                placeholder="Message Ashley AI"
+                placeholder="Message Ashley Knowledge Base"
                 className="flex-1 bg-transparent outline-none text-sm placeholder-gray-500"
               />
               <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all" title="Voice">
