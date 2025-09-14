@@ -31,7 +31,7 @@ export function ShellLayout({ children, initialSelectedDepartment = null, suppre
       <Sidebar
         selectedDepartment={selectedDepartment}
         onDepartmentSelect={setSelectedDepartment}
-        onPlusClick={() => setHistoryOpen(true)}
+        onPlusClick={() => { if (typeof window !== 'undefined') { window.dispatchEvent(new CustomEvent('open-recent-activity')); } }}
       />
 
       {/* Main Content Area */}

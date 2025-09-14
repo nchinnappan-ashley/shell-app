@@ -18,7 +18,7 @@ import {
   MicrophoneIcon,
   SparklesIcon,
   PaperClipIcon,
-  ArrowLeftIcon,
+
   ArrowRightIcon,
   PaperAirplaneIcon,
   UserIcon,
@@ -29,7 +29,9 @@ import {
   AcademicCapIcon,
   PencilSquareIcon,
   AdjustmentsHorizontalIcon,
-  WrenchScrewdriverIcon
+  WrenchScrewdriverIcon,
+  PlusIcon,
+  XMarkIcon
 } from '@heroicons/react/24/outline';
 import AshleyNews from './AshleyNews';
 import ServiceNowIncidents from './ServiceNowIncidents';
@@ -190,10 +192,40 @@ export function MainContent() {
     if (!q) return [] as AppEntry[];
     return apps.filter(a => a.title.toLowerCase().includes(q)).slice(0, 7);
   }, [apps, query]);
+
+  // Record one activity when user chooses a menu and navigates
+  const recordNavActivity = (text: string, href: string) => {
+    try {
+      const raw = localStorage.getItem('oa_recent_acts');
+      const list = raw ? JSON.parse(raw) : [];
+      const now = Date.now();
+      const item = { id: String(now) + Math.random().toString(36).slice(2), text, href, ts: now, count: 1, startedAt: now };
+      const next = [item, ...list].slice(0, 30);
+      localStorage.setItem('oa_recent_acts', JSON.stringify(next));
+      localStorage.removeItem('oa_current_act');
+      window.dispatchEvent(new CustomEvent('recent-activity', { detail: item }));
+    } catch {}
+  };
+
+  // Allow user to continue a past activity explicitly
+  const continueActivity = (id: string) => {
+    try {
+      const now = Date.now();
+      localStorage.setItem(CURRENT_ACT_KEY, JSON.stringify({ id, startedAt: now, updatedAt: now }));
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('continue-activity', { detail: { id } }));
+      }
+    } catch {}
+  };
+
+
   const go = (id: string) => {
     const app = apps.find(a => a.id === id);
     const path = externalRoutes[id] ?? `/apps/${id}`;
+    const label = app?.title || id;
     recordSearch({ id, title: app?.title, query: (query || app?.title || '').trim(), path });
+    // Rule: choosing a menu and navigating is a single activity
+    recordNavActivity(`Open: ${label}`, path);
     if (path.startsWith('http')) {
       if (typeof window !== 'undefined') window.location.href = path; else router.push(path);
     } else {
@@ -344,6 +376,34 @@ export function MainContent() {
       window.dispatchEvent(new Event('order-draft-updated'));
     } catch {}
   }, [agentMode, orderStep, orderDraft, agentMessages]);
+  // Persist per-activity flow state keyed by current activity id
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const curRaw = localStorage.getItem(CURRENT_ACT_KEY);
+      const cur = curRaw ? JSON.parse(curRaw) : null;
+      const id: string | null = cur?.id ?? null;
+      if (!id) return;
+      // Determine kind for the current activity
+      let kind: RecentAct['kind'] = (agentMode === 'createOrderAD' ? 'createOrder' : (agentMode === 'inRouteAD' ? 'inRoute' : 'chat'));
+      try {
+        const list: RecentAct[] = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]');
+        const act = list.find(a => a.id === id);
+        if (act?.kind) kind = act.kind;
+      } catch {}
+      const payload = {
+        kind,
+        mode: agentMode,
+        step: orderStep,
+        inRouteStep,
+        order: orderDraft,
+        messages: agentMessages,
+        updatedAt: Date.now(),
+      };
+      localStorage.setItem(`${FLOW_STATE_PREFIX}${id}`, JSON.stringify(payload));
+    } catch {}
+  }, [agentMode, orderStep, inRouteStep, orderDraft, agentMessages]);
+
   const resumeFromDraft = () => {
     const d = loadDraft();
     if (!d) return;
@@ -360,21 +420,198 @@ export function MainContent() {
   const pushAssistant = (text: string) => setAgentMessages((m) => [...m, { role: 'assistant', content: text }]);
   const pushUser = (text: string) => setAgentMessages((m) => [...m, { role: 'user', content: text }]);
 
-  // Recent Activity: store hero-search submissions (not menu search)
+  // Recent Activity: group messages into a single activity per session
   const RECENT_KEY = 'oa_recent_acts';
-  type RecentAct = { id: string; text: string; ts: number; href?: string };
-  const addRecent = (entry: Omit<RecentAct, 'id' | 'ts'> & { ts?: number }) => {
+  const CURRENT_ACT_KEY = 'oa_current_act';
+  const FLOW_STATE_PREFIX = 'oa_flow_state_';
+
+  type RecentAct = { id: string; text: string; ts: number; href?: string; count?: number; startedAt?: number; kind?: 'createOrder' | 'inRoute' | 'chat' | 'nav' };
+  const addRecent = (entry: Omit<RecentAct, 'id' | 'ts' | 'count'> & { ts?: number }) => {
     try {
       const raw = localStorage.getItem(RECENT_KEY);
       const list: RecentAct[] = raw ? JSON.parse(raw) : [];
-      const item: RecentAct = { id: String(Date.now()) + Math.random().toString(36).slice(2), text: entry.text, href: entry.href, ts: entry.ts ?? Date.now() };
+      const now = entry.ts ?? Date.now();
+      // If navigation/link activity => always record as its own item and end chat session
+      if (entry.href) {
+        const item: RecentAct = { id: String(now) + Math.random().toString(36).slice(2), text: entry.text, href: entry.href, ts: now, count: 1, startedAt: now, kind: 'nav' };
+        const next = [item, ...list].slice(0, 30);
+        localStorage.setItem(RECENT_KEY, JSON.stringify(next));
+        localStorage.removeItem(CURRENT_ACT_KEY);
+        window.dispatchEvent(new CustomEvent('recent-activity', { detail: item }));
+        return;
+      }
+      // Chat-type activity: append to existing current activity if present; else create new
+      const currentRaw = localStorage.getItem(CURRENT_ACT_KEY);
+      // Respect inactivity timeout: 15 minutes
+      const ACTIVE_TIMEOUT = 15 * 60 * 1000;
+      let currentId: string | null = null;
+      let curObj = (currentRaw ? JSON.parse(currentRaw) : null) as { id?: string; startedAt?: number; updatedAt?: number } | null;
+      try { curObj = currentRaw ? JSON.parse(currentRaw) : null; } catch { curObj = null; }
+      if (curObj && (now - (curObj.updatedAt ?? curObj.startedAt ?? 0) <= ACTIVE_TIMEOUT)) {
+        currentId = curObj.id || null;
+      } else {
+        // session expired or missing
+        localStorage.removeItem(CURRENT_ACT_KEY);
+        currentId = null;
+      }
+
+      if (currentId) {
+        // find and update existing item
+        const idx = list.findIndex(i => i.id === currentId);
+        if (idx >= 0) {
+          const updated: RecentAct = {
+            ...list[idx],
+            text: list[idx].text ? `${list[idx].text} | ${entry.text}` : entry.text,
+            ts: now,
+            count: (list[idx].count || 1) + 1,
+            startedAt: list[idx].startedAt ?? (curObj?.startedAt ?? now),
+          };
+          const next = [updated, ...list.slice(0, idx), ...list.slice(idx + 1)].slice(0, 30);
+          localStorage.setItem(RECENT_KEY, JSON.stringify(next));
+          try { const cur = currentRaw ? JSON.parse(currentRaw) : null; localStorage.setItem(CURRENT_ACT_KEY, JSON.stringify({ id: updated.id, startedAt: cur?.startedAt ?? now, updatedAt: now })); } catch {}
+          window.dispatchEvent(new CustomEvent('recent-activity', { detail: updated }));
+          return;
+        } else {
+          // fall through to create new if not found
+          localStorage.removeItem(CURRENT_ACT_KEY);
+        }
+      }
+      const item: RecentAct = { id: String(now) + Math.random().toString(36).slice(2), text: entry.text, ts: now, count: 1, startedAt: now, kind: (agentMode === 'createOrderAD' ? 'createOrder' : (agentMode === 'inRouteAD' ? 'inRoute' : 'chat')) };
       const next = [item, ...list].slice(0, 30);
       localStorage.setItem(RECENT_KEY, JSON.stringify(next));
+      localStorage.setItem(CURRENT_ACT_KEY, JSON.stringify({ id: item.id, startedAt: now }));
       window.dispatchEvent(new CustomEvent('recent-activity', { detail: item }));
     } catch {}
   };
   // Recent Activity (hero-search) — read list for on-page widget
   const [heroRecents, setHeroRecents] = useState<RecentAct[]>([]);
+  const [recentsOpen, setRecentsOpen] = useState(false);
+  const [recentsVisible, setRecentsVisible] = useState(false);
+  const openRecents = () => { setRecentsOpen(true); requestAnimationFrame(() => setRecentsVisible(true)); };
+  const closeRecents = () => { setRecentsVisible(false); setTimeout(() => setRecentsOpen(false), 300); };
+
+  // Drawer filter for click-through from metric tiles
+  type RecentsFilter = 'all' | 'awaiting' | 'focus' | 'opps';
+  const [recentsFilter, setRecentsFilter] = useState<RecentsFilter>('all');
+  const filteredRecents = useMemo(() => {
+    const now = Date.now();
+    const sevenDays = 7 * 24 * 60 * 60 * 1000;
+    if (recentsFilter === 'focus') {
+      return heroRecents.filter(r => !r.href && (r.count || 1) > 1 && (now - r.ts) < sevenDays);
+    }
+    if (recentsFilter === 'opps') {
+      return heroRecents.filter(r => (((r as unknown as { kind?: string }).kind === 'nav') || !!r.href || (r as unknown as { kind?: string }).kind === 'createOrder' || (r as unknown as { kind?: string }).kind === 'inRoute') && (now - r.ts) < sevenDays);
+    }
+    if (recentsFilter === 'awaiting') {
+      return heroRecents.filter(r => !r.href && (now - r.ts) < sevenDays);
+    }
+    return heroRecents;
+  }, [recentsFilter, heroRecents]);
+
+
+  // Start a brand new conversation: end current session and reset state
+  const startNewConversation = () => {
+    try { localStorage.removeItem(CURRENT_ACT_KEY); } catch {}
+    // clear chat UI state
+    setAgentMode('none');
+    setOrderStep(null);
+    setInRouteStep(null);
+    setAgentMessages([]);
+    setQuery('');
+    // reset order draft to defaults
+    setOrderDraft({
+      customerNumber: '',
+      shipTo: '',
+      items: [],
+      quantities: [],
+      warehouse: '',
+      orderType: 'complete',
+      shipMethod: 'delivery',
+
+
+      requestDate: ''
+    });
+    setTimeout(() => textRef.current?.focus(), 0);
+  };
+
+  // Listen for global request to open Recent Activity (from sidebar hamburger)
+  useEffect(() => {
+    const handler = () => openRecents();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('open-recent-activity', handler as EventListener);
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('open-recent-activity', handler as EventListener);
+      }
+    };
+  }, []);
+
+  // When user clicks Continue on an activity: resume flow (if any), close drawer, and focus input
+  useEffect(() => {
+    const handler = (ev: Event) => {
+      let restored = false;
+      try {
+        const detailId = (ev as CustomEvent<{ id?: string }>).detail?.id || null;
+
+
+        let id = detailId as string | null;
+        if (!id) {
+          try {
+            const cur = JSON.parse(localStorage.getItem(CURRENT_ACT_KEY) || 'null');
+            id = cur?.id ?? null;
+          } catch {}
+        }
+        if (id) {
+          let flow: any = null;
+          try { flow = JSON.parse(localStorage.getItem(`${FLOW_STATE_PREFIX}${id}`) || 'null'); } catch {}
+          if (flow && flow.kind === 'createOrder') {
+            setAgentMode('createOrderAD');
+            setOrderStep(flow.step ?? 'askCustomer');
+            if (flow.order) setOrderDraft(flow.order);
+            if (flow.messages) setAgentMessages(flow.messages);
+            pushAssistant('Resumed your Create Order activity.');
+            restored = true;
+          } else if (flow && flow.kind === 'inRoute') {
+            setAgentMode('inRouteAD');
+            setInRouteStep(flow.inRouteStep ?? 'askCustomer');
+            if (flow.messages) setAgentMessages(flow.messages);
+            pushAssistant('Resumed your In Route activity.');
+            restored = true;
+          } else if (flow && flow.kind === 'chat') {
+            setAgentMode('none');
+            if (flow.messages) setAgentMessages(flow.messages);
+            restored = true;
+          }
+        }
+      } catch {}
+      if (!restored) {
+        pushAssistant("Can't resume this activity — no saved process. You can continue typing.");
+      }
+      closeRecents();
+      setTimeout(() => { try { textRef.current?.focus(); } catch {} }, 320);
+    };
+    if (typeof window !== 'undefined') window.addEventListener('continue-activity', handler as EventListener);
+    return () => { if (typeof window !== 'undefined') window.removeEventListener('continue-activity', handler as EventListener); };
+  }, []);
+
+
+
+  // Auto-end chat session after 15 minutes of inactivity
+  useEffect(() => {
+    const ACTIVE_TIMEOUT = 15 * 60 * 1000;
+    const t = setInterval(() => {
+      try {
+        const cur = JSON.parse(localStorage.getItem(CURRENT_ACT_KEY) || 'null');
+        const last = cur ? (cur.updatedAt ?? cur.startedAt ?? 0) : 0;
+        if (cur && Date.now() - last > ACTIVE_TIMEOUT) {
+          localStorage.removeItem(CURRENT_ACT_KEY);
+        }
+      } catch {}
+    }, 60 * 1000);
+    return () => clearInterval(t);
+  }, []);
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const load = () => {
@@ -392,8 +629,42 @@ export function MainContent() {
     };
   }, []);
 
+  // Client-derived metrics for the agentic header strip
+  type AgentMetrics = { counts: { awaitingActions: number; focusItems: number; opportunities: number }; updatedAt: number };
+  const [metrics, setMetrics] = useState<AgentMetrics>({ counts: { awaitingActions: 0, focusItems: 0, opportunities: 0 }, updatedAt: Date.now() });
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const now = Date.now();
+      const sevenDays = 7 * 24 * 60 * 60 * 1000;
+      let awaiting = 0;
+      if (agentMode === 'createOrderAD' && orderStep && orderStep !== 'done') awaiting += 1;
+      if (agentMode === 'inRouteAD' && inRouteStep && inRouteStep !== 'done') awaiting += 1;
+      if (resumeDraft && agentMode === 'none') awaiting += 1;
+      const focus = heroRecents.filter(r => !r.href && (r.count || 1) > 1 && (now - r.ts) < sevenDays).length;
+      const opp = heroRecents.filter(r => ((r as unknown as { kind?: string }).kind === 'nav' || !!r.href || (r as unknown as { kind?: string }).kind === 'createOrder' || (r as unknown as { kind?: string }).kind === 'inRoute') && (now - r.ts) < sevenDays).length;
+      setMetrics({ counts: { awaitingActions: awaiting, focusItems: focus, opportunities: opp }, updatedAt: now });
+    }, 250);
+    return () => clearTimeout(t);
+  }, [agentMode, orderStep, inRouteStep, resumeDraft, heroRecents]);
+
+
+  // Human friendly "ago" for tooltips
+  const timeAgo = (t: number): string => {
+    const s = Math.max(0, Math.floor((Date.now() - t) / 1000));
+    if (s < 60) return `${s}s`;
+    const m = Math.floor(s / 60);
+    if (m < 60) return `${m}m`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h`;
+    const d = Math.floor(h / 24);
+    return `${d}d`;
+  };
+
 
   const beginCreateOrderFlow = () => {
+
+
     setAgentMode('createOrderAD');
     setOrderStep('askCustomer');
     pushAssistant("Great — let's create an order in Ashley Direct. What is the customer number and ship-to? For example: 123456, 789012");
@@ -420,6 +691,7 @@ export function MainContent() {
     if (nums.length >= 2) {
       const customer = String(nums[0]);
       const shipTo = String(nums[1]);
+
       const p = new URLSearchParams({ customer, shipTo });
       addRecent({ text: `In Route Orders: customer ${customer}, ship-to ${shipTo}`, href: `/apps/inroute?customer=${customer}&shipTo=${shipTo}` });
       pushAssistant('Showing trips in route for the provided ship-to. Redirecting...');
@@ -666,21 +938,33 @@ export function MainContent() {
             <div className="bg-white rounded-2xl border border-gray-200 shadow-lg p-4">
             {/* Top toolbar with arrows and metrics */}
             <div className="flex items-center justify-between gap-3 px-1">
-              <button type="button" className="w-9 h-9 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                <ArrowLeftIcon className="w-5 h-5" />
+              <button type="button" onClick={startNewConversation} title="New Conversation" className="w-9 h-9 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                <PlusIcon className="w-5 h-5" />
               </button>
               <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-center">
+                <div
+                  className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-center cursor-pointer hover:bg-gray-100"
+                  title={`Last updated ${timeAgo(metrics.updatedAt)} ago`}
+                  onClick={() => { setRecentsFilter('awaiting'); openRecents(); }}
+                >
                   <div className="text-[12px] font-semibold text-gray-700">Awaiting Actions</div>
-                  <div className="text-emerald-600 font-bold">35</div>
+                  <div className="text-emerald-600 font-bold" aria-live="polite">{metrics.counts.awaitingActions}</div>
                 </div>
-                <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-center">
+                <div
+                  className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-center cursor-pointer hover:bg-gray-100"
+                  title={`Last updated ${timeAgo(metrics.updatedAt)} ago`}
+                  onClick={() => { setRecentsFilter('focus'); openRecents(); }}
+                >
                   <div className="text-[12px] font-semibold text-gray-700">Focus Items</div>
-                  <div className="text-amber-600 font-bold">48</div>
+                  <div className="text-amber-600 font-bold" aria-live="polite">{metrics.counts.focusItems}</div>
                 </div>
-                <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-center">
+                <div
+                  className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-center cursor-pointer hover:bg-gray-100"
+                  title={`Last updated ${timeAgo(metrics.updatedAt)} ago`}
+                  onClick={() => { setRecentsFilter('opps'); openRecents(); }}
+                >
                   <div className="text-[12px] font-semibold text-gray-700">Opportunities</div>
-                  <div className="text-orange-600 font-bold">12</div>
+                  <div className="text-orange-600 font-bold" aria-live="polite">{metrics.counts.opportunities}</div>
                 </div>
               </div>
               <button type="button" className="w-9 h-9 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center">
@@ -794,34 +1078,7 @@ export function MainContent() {
           </div>
 
         {/* Right of hero-search: Recent Activity */}
-        <aside className="hidden xl:block w-80 shrink-0">
-          <section className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-semibold text-gray-900">Recent Activity</h3>
-              {heroRecents.length > 0 && (
-                <button type="button" className="text-[11px] text-indigo-600 hover:underline"
-                  onClick={() => { localStorage.removeItem(RECENT_KEY); setHeroRecents([]); }}>Clear</button>
-              )}
-            </div>
-            {heroRecents.length === 0 ? (
-              <div className="text-xs text-gray-500 mt-2">No recent items yet. Try the big search box to get started.</div>
-            ) : (
-              <ul className="mt-2 divide-y divide-gray-100">
-                {heroRecents.slice(0, 6).map(r => (
-                  <li key={r.id} className="py-2 text-[13px] flex items-start gap-2">
-                    <span className="mt-1 inline-block w-1.5 h-1.5 rounded-full bg-indigo-500" />
-                    {r.href ? (
-                      <a href={r.href} className="flex-1 text-indigo-600 hover:underline break-words">{r.text}</a>
-                    ) : (
-                      <span className="flex-1 text-gray-800 break-words">{r.text}</span>
-                    )}
-                    <span className="ml-2 shrink-0 text-[10px] text-gray-500">{new Date(r.ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-        </aside>
+
 
         </div>
 
@@ -900,6 +1157,82 @@ export function MainContent() {
         {/* External Ads (logo carousel) */}
         <AdCarousel />
       </div>
+
+      {/* Slide-in Recent Activity Drawer */}
+      {recentsOpen && (
+        <div className="fixed inset-0 z-50">
+          <div className={`absolute inset-0 bg-black/30 transition-opacity duration-300 ${recentsVisible ? 'opacity-100' : 'opacity-0'}`} onClick={closeRecents} />
+          <div className={`absolute left-0 top-0 h-full w-80 bg-white shadow-2xl border-r border-gray-200 flex flex-col transform transition-transform duration-300 ${recentsVisible ? 'translate-x-0' : '-translate-x-full'}`}>
+            <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+              <h3 className="text-base font-semibold text-gray-900">Recent Activity</h3>
+              <button type="button" onClick={closeRecents} className="p-1 rounded hover:bg-gray-100">
+                <XMarkIcon className="w-5 h-5 text-gray-500" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-3">
+              {filteredRecents.length === 0 ? (
+                <div className="text-xs text-gray-500">No recent items yet. Try the big search box to get started.</div>
+              ) : (
+                <ul className="divide-y divide-gray-100">
+                  {filteredRecents.map((r) => (
+                    <li key={r.id} className="py-2 text-[13px] flex items-start gap-2">
+                      <span className="mt-1 inline-block w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                      <div className="flex-1 min-w-0">
+                        {r.href ? (
+                          <a
+                            href={r.href}
+                            onClick={() => { closeRecents(); setTimeout(() => { try { textRef.current?.focus(); } catch {} }, 320); }}
+                            className="text-indigo-600 hover:underline break-words"
+                          >
+                            {r.text}
+                          </a>
+                        ) : (
+                          <span className="text-gray-800 break-words">{r.text}</span>
+                        )}
+                        <div className="mt-1 flex items-center gap-2">
+                          {r.count && r.count > 1 && (
+                            <span className="inline-flex items-center justify-center px-1.5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-semibold">
+                              {r.count} msgs
+                            </span>
+                          )}
+                          {!r.href && (
+                            <button
+                              type="button"
+                              onClick={() => continueActivity(r.id)}
+                              className="text-[11px] text-indigo-600 hover:underline"
+                              title="Continue this activity"
+                            >
+                              Continue
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                      <span
+                        className="ml-2 shrink-0 text-[10px] text-gray-500"
+                        title={`Started: ${new Date((r as RecentAct).startedAt || r.ts).toLocaleString()} | Updated: ${new Date(r.ts).toLocaleString()}`}
+                      >
+                        {new Date(r.ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            {filteredRecents.length > 0 && (
+              <div className="px-3 py-2 border-t border-gray-200">
+                <button
+                  type="button"
+                  onClick={() => { localStorage.removeItem(RECENT_KEY); localStorage.removeItem(CURRENT_ACT_KEY); setHeroRecents([]); }}
+                  className="text-[11px] text-indigo-600 hover:underline"
+                >
+                  Clear
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
