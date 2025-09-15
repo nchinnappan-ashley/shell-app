@@ -114,22 +114,24 @@ export default function CreateOrderPage() {
           <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <div className="text-sm font-medium text-gray-800 mb-2">Order Type</div>
-              <div className="flex flex-wrap gap-4 text-sm">
-                <label className="inline-flex items-center gap-2">
+              <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                <label className="inline-flex items-center gap-2 text-gray-800">
                   <input
                     type="radio"
                     name="orderType"
                     checked={orderType === "complete"}
                     onChange={() => setOrderType("complete")}
+                    className="h-4 w-4 accent-indigo-600"
                   />
                   Ship Complete Series Groups
                 </label>
-                <label className="inline-flex items-center gap-2">
+                <label className="inline-flex items-center gap-2 text-gray-800">
                   <input
                     type="radio"
                     name="orderType"
                     checked={orderType === "available"}
                     onChange={() => setOrderType("available")}
+                    className="h-4 w-4 accent-indigo-600"
                   />
                   Ship Items As Available
                 </label>
@@ -137,21 +139,21 @@ export default function CreateOrderPage() {
             </div>
             <div>
               <div className="text-sm font-medium text-gray-800 mb-2">Shipping Type</div>
-              <div className="flex flex-wrap gap-4 text-sm">
-                <label className="inline-flex items-center gap-2">
-                  <input type="radio" checked={shipMethod === "delivery"} onChange={() => setShipMethod("delivery")} />
+              <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                <label className="inline-flex items-center gap-2 text-gray-800">
+                  <input type="radio" className="h-4 w-4 accent-indigo-600" checked={shipMethod === "delivery"} onChange={() => setShipMethod("delivery")} />
                   Delivery
                 </label>
-                <label className="inline-flex items-center gap-2">
-                  <input type="radio" checked={shipMethod === "full"} onChange={() => setShipMethod("full")} />
+                <label className="inline-flex items-center gap-2 text-gray-800">
+                  <input type="radio" className="h-4 w-4 accent-indigo-600" checked={shipMethod === "full"} onChange={() => setShipMethod("full")} />
                   Full Truckload Pickup
                 </label>
-                <label className="inline-flex items-center gap-2">
-                  <input type="radio" checked={shipMethod === "express"} onChange={() => setShipMethod("express")} />
+                <label className="inline-flex items-center gap-2 text-gray-800">
+                  <input type="radio" className="h-4 w-4 accent-indigo-600" checked={shipMethod === "express"} onChange={() => setShipMethod("express")} />
                   Ashley Express
                 </label>
-                <label className="inline-flex items-center gap-2">
-                  <input type="radio" checked={shipMethod === "ltl"} onChange={() => setShipMethod("ltl")} />
+                <label className="inline-flex items-center gap-2 text-gray-800">
+                  <input type="radio" className="h-4 w-4 accent-indigo-600" checked={shipMethod === "ltl"} onChange={() => setShipMethod("ltl")} />
                   Less Than Full Truckload / Carrier
                 </label>
               </div>

@@ -1,9 +1,8 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
   "/api/news/route": "app/api/news/route.js",
-  "/apps/[department]/page": "app/apps/[department]/page.js",
+  "/api/rag/ingest/route": "app/api/rag/ingest/route.js",
+  "/api/rag/query/route": "app/api/rag/query/route.js",
   "/apps/createorder/page": "app/apps/createorder/page.js",
-  "/apps/inroute/page": "app/apps/inroute/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
   "/page": "app/page.js"
 }

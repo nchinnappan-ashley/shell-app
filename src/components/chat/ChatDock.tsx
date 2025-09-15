@@ -40,6 +40,10 @@ function usePersistentMessages() {
   return [messages, setMessages] as const;
 }
 
+function escapeHtml(s: string) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function escapeRegExp(s: string) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+function tokenizeQ(q: string) { return q.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(Boolean).filter(t => t.length >= 3); }
+
 export default function ChatDock() {
   const [open, setOpen] = useState(false);
   const [session, setSession] = useState<AgentSession | null>(null);
@@ -250,7 +254,20 @@ export default function ChatDock() {
                         : "bg-gray-100 text-gray-800 rounded-bl-sm"
                     }`}
                   >
-                    <div>{m.content}</div>
+                    {m.role === 'assistant' ? (
+                      (() => {
+                        const idx = messages.findIndex(x => x.id === m.id);
+                        let prevUser = '';
+                        for (let j = idx - 1; j >= 0; j--) { if (messages[j]?.role === 'user') { prevUser = messages[j].content || ''; break; } }
+                        const toks = tokenizeQ(prevUser);
+                        const re = toks.length ? new RegExp('(' + toks.map(escapeRegExp).join('|') + ')', 'gi') : null;
+                        const safe = escapeHtml(m.content);
+                        const html = re ? safe.replace(re, (mt) => `<mark class=\"bg-yellow-200 rounded px-0.5\">${mt}</mark>`) : safe;
+                        return <div dangerouslySetInnerHTML={{ __html: html }} />;
+                      })()
+                    ) : (
+                      <div>{m.content}</div>
+                    )}
                     {m.role === 'assistant' && m.attachment?.type === 'report' && (
                       <div className="mt-2 flex flex-wrap gap-2">
                         <button onClick={() => downloadCSV(m.attachment!)} className="px-2 py-1 text-xs rounded-md bg-white/70 hover:bg-white text-gray-800 border border-gray-200 shadow-sm">CSV</button>

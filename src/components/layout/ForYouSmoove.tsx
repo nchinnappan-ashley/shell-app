@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import catalogData from "@/data/catalog.json";
+import catalogData from "@/data/catalog";
 import {
   BuildingOfficeIcon,
   TruckIcon,
@@ -40,7 +40,7 @@ type CardItem = {
   accentEnd?: string;
 };
 
-const ITEMS: CardItem[] = (catalogData as CardItem[]).slice(0, 12);
+const ITEMS: CardItem[] = (catalogData as CardItem[]);
 
 // Lightweight Reveal wrapper (based on my-scroll-app/app/components/Reveal.tsx)
 function Reveal({
@@ -108,19 +108,38 @@ function Reveal({
   );
 }
 
-export default function ForYouSmoove({ onSpaceAvailable }: { onSpaceAvailable?: (available: boolean, height: number) => void }) {
+export default function ForYouSmoove({ onSpaceAvailable, onExtraSpace }: { onSpaceAvailable?: (available: boolean, height: number) => void; onExtraSpace?: (extraAfterFirstRow: number) => void }) {
   const sectionRef = React.useRef<HTMLDivElement | null>(null);
   const visCountRef = React.useRef(0);
   const hasEverRef = React.useRef(false);
   const [contentH, setContentH] = React.useState(0);
+  const gridRef = React.useRef<HTMLDivElement | null>(null);
+  const getCols = () => {
+    if (typeof window === 'undefined') return 2;
+    if (window.matchMedia('(min-width: 1024px)').matches) return 5;
+    if (window.matchMedia('(min-width: 640px)').matches) return 3;
+    return 2;
+  };
+  const [firstRowCount, setFirstRowCount] = React.useState<number>(() => getCols());
 
-  // measure section height
+  // measure section height and compute first row columns responsively
   React.useEffect(() => {
     const measure = () => setContentH(sectionRef.current?.offsetHeight || 0);
-    measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
+    const handle = () => { measure(); setFirstRowCount(getCols()); };
+    handle();
+    window.addEventListener('resize', handle);
+    return () => window.removeEventListener('resize', handle);
   }, []);
+
+  const computeExtra = React.useCallback(() => {
+    const grid = gridRef.current;
+    if (!grid) { onExtraSpace?.(0); return; }
+    const total = grid.offsetHeight || 0;
+    const first = grid.firstElementChild as HTMLElement | null;
+    const firstH = first?.offsetHeight || 0;
+    const extra = Math.max(0, total - firstH);
+    onExtraSpace?.(extra);
+  }, [onExtraSpace]);
 
   const handleVisibleChange = React.useCallback((v: boolean) => {
     const next = visCountRef.current + (v ? 1 : -1);
@@ -130,22 +149,25 @@ export default function ForYouSmoove({ onSpaceAvailable }: { onSpaceAvailable?: 
     const h = sectionRef.current?.offsetHeight || contentH;
     setContentH(h);
     onSpaceAvailable?.(empty, h);
-  }, [onSpaceAvailable, contentH]);
+    computeExtra();
+  }, [onSpaceAvailable, contentH, computeExtra]);
 
   React.useLayoutEffect(() => {
     // Initial notify: run before paint to avoid layout flash on reload
     const notify = () => {
       const el = sectionRef.current;
       const h = el?.offsetHeight || 0;
-      // On first paint, no cards are visible yet -> treat as empty until IntersectionObserver reports otherwise
-      const empty = visCountRef.current === 0;
+      // First row should be visible without scroll
+      visCountRef.current = firstRowCount;
+      const empty = firstRowCount === 0;
       onSpaceAvailable?.(empty, h);
+      computeExtra();
     };
     notify();
     // run a second time next frame in case fonts/images change metrics
     const raf = typeof window !== 'undefined' ? window.requestAnimationFrame(() => notify()) : 0;
     return () => { if (raf && typeof window !== 'undefined') window.cancelAnimationFrame(raf); };
-  }, [onSpaceAvailable]);
+  }, [onSpaceAvailable, firstRowCount, computeExtra]);
 
   return (
     <section ref={sectionRef} aria-label="For You" className="relative max-w-7xl mx-auto pt-3 pb-4">
@@ -158,12 +180,43 @@ export default function ForYouSmoove({ onSpaceAvailable }: { onSpaceAvailable?: 
         </div>
       </div>
 
-      {/* Grid of cards with Smoove-style slide-in ("You can also move objects across the screen...") */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      {/* Grid of cards: first row visible immediately; subsequent rows reveal on scroll */}
+      <div ref={gridRef} className="foryou-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         {ITEMS.map((card, i) => {
           const Icon = ICONS[card.icon || ""] || Squares2X2Icon;
-          const moveX = i % 2 === 0 ? "-120px" : "120px"; // alternate directions like the demo
-          const rotateY = i % 2 === 0 ? "-8deg" : "8deg"; // a little 3D for depth
+          const moveX = i % 2 === 0 ? "-120px" : "120px";
+          const rotateY = i % 2 === 0 ? "-8deg" : "8deg";
+          const Card = (
+            <Link
+              href={`/apps/${card.id}`}
+              onClick={(e) => { if (card.id === 'ashleydirect') { e.preventDefault(); if (typeof window !== 'undefined') window.location.href = 'http://localhost:3001/apps/ashleydirect'; } }}
+              className="group block overflow-hidden rounded-xl bg-white ring-1 ring-gray-200/70 shadow-[0_1px_2px_rgba(16,24,40,.06)] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[var(--ring)]"
+            >
+              <div
+                className="w-full h-48 flex items-center justify-center"
+                style={{
+                  background: card.accentStart && card.accentEnd
+                    ? `linear-gradient(135deg, ${card.accentStart}, ${card.accentEnd})`
+                    : `linear-gradient(135deg, color-mix(in srgb, var(--primary) 12%, white), color-mix(in srgb, var(--primary) 24%, white))`,
+                }}
+              >
+                <div className="w-16 h-16 rounded-2xl bg-white/90 text-[var(--primary)] shadow-sm flex items-center justify-center">
+                  <Icon className="w-8 h-8" />
+                </div>
+              </div>
+              <div className="px-3 py-2">
+                <h3 className="text-[12px] font-medium text-gray-800 line-clamp-2">{card.title}</h3>
+              </div>
+            </Link>
+          );
+          if (i < firstRowCount) {
+            // First row: render as already visible (no observer)
+            return (
+              <div key={card.id}>
+                {Card}
+              </div>
+            );
+          }
           return (
             <Reveal
               key={card.id}
@@ -177,27 +230,7 @@ export default function ForYouSmoove({ onSpaceAvailable }: { onSpaceAvailable?: 
                 ["--perspective" as any]: "800px",
               }}
             >
-              <Link
-                href={`/apps/${card.id}`}
-                onClick={(e) => { if (card.id === 'ashleydirect') { e.preventDefault(); if (typeof window !== 'undefined') window.location.href = 'http://localhost:3001/apps/ashleydirect'; } }}
-                className="group block overflow-hidden rounded-xl bg-white ring-1 ring-gray-200/70 shadow-[0_1px_2px_rgba(16,24,40,.06)] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[var(--ring)]"
-              >
-                <div
-                  className="w-full h-48 flex items-center justify-center"
-                  style={{
-                    background: card.accentStart && card.accentEnd
-                      ? `linear-gradient(135deg, ${card.accentStart}, ${card.accentEnd})`
-                      : `linear-gradient(135deg, color-mix(in srgb, var(--primary) 12%, white), color-mix(in srgb, var(--primary) 24%, white))`,
-                  }}
-                >
-                  <div className="w-16 h-16 rounded-2xl bg-white/90 text-[var(--primary)] shadow-sm flex items-center justify-center">
-                    <Icon className="w-8 h-8" />
-                  </div>
-                </div>
-                <div className="px-3 py-2">
-                  <h3 className="text-[12px] font-medium text-gray-800 line-clamp-2">{card.title}</h3>
-                </div>
-              </Link>
+              {Card}
             </Reveal>
           );
         })}

@@ -10,7 +10,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$styled$2d$jsx$2f$style$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/styled-jsx/style.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$data$2f$catalog$2e$json__$28$json$29$__ = __turbopack_context__.i("[project]/src/data/catalog.json (json)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$data$2f$catalog$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/data/catalog.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$24$2f$outline$2f$esm$2f$BuildingOfficeIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__BuildingOfficeIcon$3e$__ = __turbopack_context__.i("[project]/node_modules/@heroicons/react/24/outline/esm/BuildingOfficeIcon.js [app-client] (ecmascript) <export default as BuildingOfficeIcon>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$24$2f$outline$2f$esm$2f$TruckIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__TruckIcon$3e$__ = __turbopack_context__.i("[project]/node_modules/@heroicons/react/24/outline/esm/TruckIcon.js [app-client] (ecmascript) <export default as TruckIcon>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$24$2f$outline$2f$esm$2f$CurrencyDollarIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CurrencyDollarIcon$3e$__ = __turbopack_context__.i("[project]/node_modules/@heroicons/react/24/outline/esm/CurrencyDollarIcon.js [app-client] (ecmascript) <export default as CurrencyDollarIcon>");
@@ -44,7 +44,7 @@ const ICONS = {
     SquaresPlusIcon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$24$2f$outline$2f$esm$2f$SquaresPlusIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__SquaresPlusIcon$3e$__["SquaresPlusIcon"],
     SparklesIcon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$24$2f$outline$2f$esm$2f$SparklesIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__SparklesIcon$3e$__["SparklesIcon"]
 };
-const ITEMS = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$data$2f$catalog$2e$json__$28$json$29$__["default"].slice(0, 12);
+const ITEMS = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$data$2f$catalog$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"];
 // Lightweight Reveal wrapper (based on my-scroll-app/app/components/Reveal.tsx)
 function Reveal(param) {
     let { children, className = "", style = {}, offset = "35%", threshold = 0.1, once = false, onVisibleChange } = param;
@@ -101,13 +101,24 @@ function Reveal(param) {
 _s(Reveal, "F7BtIAxVh3vOWU1Jr24RYsj9CHc=");
 _c = Reveal;
 function ForYouSmoove(param) {
-    let { onSpaceAvailable } = param;
+    let { onSpaceAvailable, onExtraSpace } = param;
     _s1();
     const sectionRef = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useRef(null);
     const visCountRef = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useRef(0);
     const hasEverRef = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useRef(false);
     const [contentH, setContentH] = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useState(0);
-    // measure section height
+    const gridRef = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useRef(null);
+    const getCols = ()=>{
+        if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+        ;
+        if (window.matchMedia('(min-width: 1024px)').matches) return 5;
+        if (window.matchMedia('(min-width: 640px)').matches) return 3;
+        return 2;
+    };
+    const [firstRowCount, setFirstRowCount] = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useState({
+        "ForYouSmoove.useState": ()=>getCols()
+    }["ForYouSmoove.useState"]);
+    // measure section height and compute first row columns responsively
     __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useEffect({
         "ForYouSmoove.useEffect": ()=>{
             const measure = {
@@ -116,13 +127,35 @@ function ForYouSmoove(param) {
                     return setContentH(((_sectionRef_current = sectionRef.current) === null || _sectionRef_current === void 0 ? void 0 : _sectionRef_current.offsetHeight) || 0);
                 }
             }["ForYouSmoove.useEffect.measure"];
-            measure();
-            window.addEventListener('resize', measure);
+            const handle = {
+                "ForYouSmoove.useEffect.handle": ()=>{
+                    measure();
+                    setFirstRowCount(getCols());
+                }
+            }["ForYouSmoove.useEffect.handle"];
+            handle();
+            window.addEventListener('resize', handle);
             return ({
-                "ForYouSmoove.useEffect": ()=>window.removeEventListener('resize', measure)
+                "ForYouSmoove.useEffect": ()=>window.removeEventListener('resize', handle)
             })["ForYouSmoove.useEffect"];
         }
     }["ForYouSmoove.useEffect"], []);
+    const computeExtra = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useCallback({
+        "ForYouSmoove.useCallback[computeExtra]": ()=>{
+            const grid = gridRef.current;
+            if (!grid) {
+                onExtraSpace === null || onExtraSpace === void 0 ? void 0 : onExtraSpace(0);
+                return;
+            }
+            const total = grid.offsetHeight || 0;
+            const first = grid.firstElementChild;
+            const firstH = (first === null || first === void 0 ? void 0 : first.offsetHeight) || 0;
+            const extra = Math.max(0, total - firstH);
+            onExtraSpace === null || onExtraSpace === void 0 ? void 0 : onExtraSpace(extra);
+        }
+    }["ForYouSmoove.useCallback[computeExtra]"], [
+        onExtraSpace
+    ]);
     const handleVisibleChange = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useCallback({
         "ForYouSmoove.useCallback[handleVisibleChange]": (v)=>{
             var _sectionRef_current;
@@ -133,10 +166,12 @@ function ForYouSmoove(param) {
             const h = ((_sectionRef_current = sectionRef.current) === null || _sectionRef_current === void 0 ? void 0 : _sectionRef_current.offsetHeight) || contentH;
             setContentH(h);
             onSpaceAvailable === null || onSpaceAvailable === void 0 ? void 0 : onSpaceAvailable(empty, h);
+            computeExtra();
         }
     }["ForYouSmoove.useCallback[handleVisibleChange]"], [
         onSpaceAvailable,
-        contentH
+        contentH,
+        computeExtra
     ]);
     __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useLayoutEffect({
         "ForYouSmoove.useLayoutEffect": ()=>{
@@ -145,9 +180,11 @@ function ForYouSmoove(param) {
                 "ForYouSmoove.useLayoutEffect.notify": ()=>{
                     const el = sectionRef.current;
                     const h = (el === null || el === void 0 ? void 0 : el.offsetHeight) || 0;
-                    // On first paint, no cards are visible yet -> treat as empty until IntersectionObserver reports otherwise
-                    const empty = visCountRef.current === 0;
+                    // First row should be visible without scroll
+                    visCountRef.current = firstRowCount;
+                    const empty = firstRowCount === 0;
                     onSpaceAvailable === null || onSpaceAvailable === void 0 ? void 0 : onSpaceAvailable(empty, h);
+                    computeExtra();
                 }
             }["ForYouSmoove.useLayoutEffect.notify"];
             notify();
@@ -162,7 +199,9 @@ function ForYouSmoove(param) {
             })["ForYouSmoove.useLayoutEffect"];
         }
     }["ForYouSmoove.useLayoutEffect"], [
-        onSpaceAvailable
+        onSpaceAvailable,
+        firstRowCount,
+        computeExtra
     ]);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
         ref: sectionRef,
@@ -178,7 +217,7 @@ function ForYouSmoove(param) {
                             className: "hidden sm:block flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"
                         }, void 0, false, {
                             fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
-                            lineNumber: 155,
+                            lineNumber: 177,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -186,33 +225,99 @@ function ForYouSmoove(param) {
                             children: "For You"
                         }, void 0, false, {
                             fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
-                            lineNumber: 156,
+                            lineNumber: 178,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                             className: "hidden sm:block flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"
                         }, void 0, false, {
                             fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
-                            lineNumber: 157,
+                            lineNumber: 179,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
-                    lineNumber: 154,
+                    lineNumber: 176,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
-                lineNumber: 153,
+                lineNumber: 175,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4",
+                ref: gridRef,
+                className: "foryou-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4",
                 children: ITEMS.map((card, i)=>{
                     const Icon = ICONS[card.icon || ""] || __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$24$2f$outline$2f$esm$2f$Squares2X2Icon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Squares2X2Icon$3e$__["Squares2X2Icon"];
-                    const moveX = i % 2 === 0 ? "-120px" : "120px"; // alternate directions like the demo
-                    const rotateY = i % 2 === 0 ? "-8deg" : "8deg"; // a little 3D for depth
+                    const moveX = i % 2 === 0 ? "-120px" : "120px";
+                    const rotateY = i % 2 === 0 ? "-8deg" : "8deg";
+                    const Card = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                        href: "/apps/".concat(card.id),
+                        onClick: (e)=>{
+                            if (card.id === 'ashleydirect') {
+                                e.preventDefault();
+                                if ("TURBOPACK compile-time truthy", 1) window.location.href = 'http://localhost:3001/apps/ashleydirect';
+                            }
+                        },
+                        className: "group block overflow-hidden rounded-xl bg-white ring-1 ring-gray-200/70 shadow-[0_1px_2px_rgba(16,24,40,.06)] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[var(--ring)]",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "w-full h-48 flex items-center justify-center",
+                                style: {
+                                    background: card.accentStart && card.accentEnd ? "linear-gradient(135deg, ".concat(card.accentStart, ", ").concat(card.accentEnd, ")") : "linear-gradient(135deg, color-mix(in srgb, var(--primary) 12%, white), color-mix(in srgb, var(--primary) 24%, white))"
+                                },
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "w-16 h-16 rounded-2xl bg-white/90 text-[var(--primary)] shadow-sm flex items-center justify-center",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                        className: "w-8 h-8"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
+                                        lineNumber: 204,
+                                        columnNumber: 19
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
+                                    lineNumber: 203,
+                                    columnNumber: 17
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
+                                lineNumber: 195,
+                                columnNumber: 15
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "px-3 py-2",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                    className: "text-[12px] font-medium text-gray-800 line-clamp-2",
+                                    children: card.title
+                                }, void 0, false, {
+                                    fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
+                                    lineNumber: 208,
+                                    columnNumber: 17
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
+                                lineNumber: 207,
+                                columnNumber: 15
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
+                        lineNumber: 190,
+                        columnNumber: 13
+                    }, this);
+                    if (i < firstRowCount) {
+                        // First row: render as already visible (no observer)
+                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            children: Card
+                        }, card.id, false, {
+                            fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
+                            lineNumber: 215,
+                            columnNumber: 15
+                        }, this);
+                    }
                     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Reveal, {
                         onVisibleChange: handleVisibleChange,
                         style: {
@@ -223,80 +328,26 @@ function ForYouSmoove(param) {
                             ["--delay"]: "".concat(i % 6 * 80, "ms"),
                             ["--perspective"]: "800px"
                         },
-                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                            href: "/apps/".concat(card.id),
-                            onClick: (e)=>{
-                                if (card.id === 'ashleydirect') {
-                                    e.preventDefault();
-                                    if ("TURBOPACK compile-time truthy", 1) window.location.href = 'http://localhost:3001/apps/ashleydirect';
-                                }
-                            },
-                            className: "group block overflow-hidden rounded-xl bg-white ring-1 ring-gray-200/70 shadow-[0_1px_2px_rgba(16,24,40,.06)] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[var(--ring)]",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "w-full h-48 flex items-center justify-center",
-                                    style: {
-                                        background: card.accentStart && card.accentEnd ? "linear-gradient(135deg, ".concat(card.accentStart, ", ").concat(card.accentEnd, ")") : "linear-gradient(135deg, color-mix(in srgb, var(--primary) 12%, white), color-mix(in srgb, var(--primary) 24%, white))"
-                                    },
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "w-16 h-16 rounded-2xl bg-white/90 text-[var(--primary)] shadow-sm flex items-center justify-center",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
-                                            className: "w-8 h-8"
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
-                                            lineNumber: 194,
-                                            columnNumber: 21
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
-                                        lineNumber: 193,
-                                        columnNumber: 19
-                                    }, this)
-                                }, void 0, false, {
-                                    fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
-                                    lineNumber: 185,
-                                    columnNumber: 17
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "px-3 py-2",
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                        className: "text-[12px] font-medium text-gray-800 line-clamp-2",
-                                        children: card.title
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
-                                        lineNumber: 198,
-                                        columnNumber: 19
-                                    }, this)
-                                }, void 0, false, {
-                                    fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
-                                    lineNumber: 197,
-                                    columnNumber: 17
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
-                            lineNumber: 180,
-                            columnNumber: 15
-                        }, this)
+                        children: Card
                     }, card.id, false, {
                         fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
-                        lineNumber: 168,
+                        lineNumber: 221,
                         columnNumber: 13
                     }, this);
                 })
             }, void 0, false, {
                 fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
-                lineNumber: 162,
+                lineNumber: 184,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/layout/ForYouSmoove.tsx",
-        lineNumber: 151,
+        lineNumber: 173,
         columnNumber: 5
     }, this);
 }
-_s1(ForYouSmoove, "okZVOAVatTL6GgXGiwPU6uUYJsM=");
+_s1(ForYouSmoove, "4AIUaSEm6Qi9g02Qu/uUZHQXmXU=");
 _c1 = ForYouSmoove;
 var _c, _c1;
 __turbopack_context__.k.register(_c, "Reveal");

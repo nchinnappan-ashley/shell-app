@@ -29,6 +29,19 @@ async function fetchAsText(url: string) {
   return data;
 }
 
+function detectEncoding(buf: Buffer): 'utf8' | 'utf16le' | 'utf16be' {
+  if (buf.length >= 2) {
+    if (buf[0] === 0xFF && buf[1] === 0xFE) return 'utf16le';
+    if (buf[0] === 0xFE && buf[1] === 0xFF) return 'utf16be';
+  }
+  return 'utf8';
+}
+function decodeUtf16be(buf: Buffer): string {
+  const swapped = Buffer.allocUnsafe(buf.length);
+  for (let i = 0; i + 1 < buf.length; i += 2) { swapped[i] = buf[i + 1]; swapped[i + 1] = buf[i]; }
+  return swapped.toString('utf16le');
+}
+
 async function readFilesFromDir(dir: string): Promise<{ url: string; title: string; text: string }[]> {
   const entries = await fs.readdir(dir, { withFileTypes: true });
   const out: { url: string; title: string; text: string }[] = [];
@@ -43,7 +56,9 @@ async function readFilesFromDir(dir: string): Promise<{ url: string; title: stri
     const ext = path.extname(ent.name).toLowerCase();
     if (!allowed.has(ext)) continue;
     try {
-      const raw = await fs.readFile(p, 'utf-8');
+      const rawBuf = await fs.readFile(p);
+      const enc = detectEncoding(rawBuf);
+      let raw = enc === 'utf8' ? rawBuf.toString('utf8') : (enc === 'utf16le' ? rawBuf.toString('utf16le') : decodeUtf16be(rawBuf));
       let text = raw;
       if (ext === '.html' || ext === '.htm') text = stripHtml(raw);
       else if (ext === '.json') {

@@ -2,7 +2,8 @@
 
 import React, { useMemo, useState, useCallback, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import catalogData from '@/data/catalog.json';
+import catalogData from '@/data/catalog';
+
 import { recordSearch } from '@/utils/searchHistory';
 import dynamic from 'next/dynamic';
 const ForYouSmoove = dynamic(() => import('./ForYouSmoove'), { ssr: false });
@@ -103,12 +104,48 @@ export function MainContent() {
   const [listening, setListening] = useState(false);
   // External routes for specific apps (microfrontends)
   const externalRoutes: Record<string, string> = {
-    ashleydirect: 'http://localhost:3001/apps/ashleydirect',
+    // Route Ashley Direct inside the shell (uses current host/port)
+    ashleydirect: '/apps/ashleydirect',
     // Use internal route for Create Order within the shell app
     createorder: '/apps/createorder',
     inroute: '/apps/inroute',
   };
   const [forYouSpace, setForYouSpace] = useState<{ available: boolean; height: number }>({ available: false, height: 0 });
+  const [forYouExtraAfterFirstRow, setForYouExtraAfterFirstRow] = useState(0);
+  const [atTop, setAtTop] = useState(true);
+  const forYouAnchorRef = useRef<HTMLDivElement | null>(null);
+
+  const getScrollParent = (node: HTMLElement | null): HTMLElement | Window => {
+    let p: HTMLElement | null = node?.parentElement || null;
+    while (p) {
+      const style = getComputedStyle(p);
+      if (/(auto|scroll|overlay)/.test(style.overflowY)) return p;
+      p = p.parentElement;
+    }
+    return window;
+  };
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const sp = getScrollParent(forYouAnchorRef.current);
+    const onScroll = () => {
+      const y = sp === window ? window.scrollY : (sp as HTMLElement).scrollTop;
+      setAtTop(y < 2);
+    };
+    onScroll();
+    if (sp === window) {
+      window.addEventListener('scroll', onScroll, { passive: true });
+    } else {
+      (sp as HTMLElement).addEventListener('scroll', onScroll as EventListener, { passive: true } as AddEventListenerOptions);
+    }
+    return () => {
+      if (sp === window) {
+        window.removeEventListener('scroll', onScroll);
+      } else {
+        (sp as HTMLElement).removeEventListener('scroll', onScroll as EventListener);
+      }
+    };
+  }, []);
 
   type RecentItem = { name: string; type: 'Orders' | 'Finance' | 'Customer' | 'Logistics'; status: string; createdBy: string; modifiedOn: string; href?: string };
   const recents: RecentItem[] = [
@@ -1142,12 +1179,12 @@ export function MainContent() {
 
 
         {/* For You Section - Feather fan on scroll */}
-        <div className="mt-2">
-          <ForYouSmoove onSpaceAvailable={handleSpaceAvailable} />
+        <div className="mt-2" ref={forYouAnchorRef}>
+          <ForYouSmoove onSpaceAvailable={handleSpaceAvailable} onExtraSpace={setForYouExtraAfterFirstRow} />
         </div>
 
-        {/* Ashley News (horizontal, animated) */}
-        <div style={{ marginTop: forYouSpace.available ? -forYouSpace.height : 0, transition: 'margin-top 400ms ease' }}>
+        {/* Ashley News (horizontal) — occupy hidden For You rows when at top */}
+        <div data-foryou-space={forYouSpace.available ? 'avail' : 'no'} style={{ marginTop: atTop ? -forYouExtraAfterFirstRow : 0, transition: 'margin-top 400ms ease' }}>
           <AshleyNews />
         </div>
 
@@ -1155,7 +1192,9 @@ export function MainContent() {
         <ServiceNowIncidents />
 
         {/* External Ads (logo carousel) */}
-        <AdCarousel />
+        <div className="mb-10">
+          <AdCarousel />
+        </div>
       </div>
 
       {/* Slide-in Recent Activity Drawer */}

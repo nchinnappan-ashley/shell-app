@@ -260,6 +260,21 @@ async function fetchAsText(url) {
     if (ct.includes('html')) return stripHtml(data);
     return data;
 }
+function detectEncoding(buf) {
+    if (buf.length >= 2) {
+        if (buf[0] === 0xFF && buf[1] === 0xFE) return 'utf16le';
+        if (buf[0] === 0xFE && buf[1] === 0xFF) return 'utf16be';
+    }
+    return 'utf8';
+}
+function decodeUtf16be(buf) {
+    const swapped = Buffer.allocUnsafe(buf.length);
+    for(let i = 0; i + 1 < buf.length; i += 2){
+        swapped[i] = buf[i + 1];
+        swapped[i + 1] = buf[i];
+    }
+    return swapped.toString('utf16le');
+}
 async function readFilesFromDir(dir) {
     const entries = await __TURBOPACK__imported__module__$5b$externals$5d2f$node$3a$fs$2f$promises__$5b$external$5d$__$28$node$3a$fs$2f$promises$2c$__cjs$29$__["default"].readdir(dir, {
         withFileTypes: true
@@ -290,7 +305,9 @@ async function readFilesFromDir(dir) {
         const ext = __TURBOPACK__imported__module__$5b$externals$5d2f$node$3a$path__$5b$external$5d$__$28$node$3a$path$2c$__cjs$29$__["default"].extname(ent.name).toLowerCase();
         if (!allowed.has(ext)) continue;
         try {
-            const raw = await __TURBOPACK__imported__module__$5b$externals$5d2f$node$3a$fs$2f$promises__$5b$external$5d$__$28$node$3a$fs$2f$promises$2c$__cjs$29$__["default"].readFile(p, 'utf-8');
+            const rawBuf = await __TURBOPACK__imported__module__$5b$externals$5d2f$node$3a$fs$2f$promises__$5b$external$5d$__$28$node$3a$fs$2f$promises$2c$__cjs$29$__["default"].readFile(p);
+            const enc = detectEncoding(rawBuf);
+            let raw = enc === 'utf8' ? rawBuf.toString('utf8') : enc === 'utf16le' ? rawBuf.toString('utf16le') : decodeUtf16be(rawBuf);
             let text = raw;
             if (ext === '.html' || ext === '.htm') text = stripHtml(raw);
             else if (ext === '.json') {

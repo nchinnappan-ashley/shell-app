@@ -271,7 +271,21 @@ const knowledgeAgent: Agent = {
         // Comprehensive mode: return synthesized multi-sentence answer
         return answer;
       }
-      if (!hits.length) return `I couldn't find anything relevant for "${q}". Try rephrasing your question.`;
+      if (!hits.length) {
+        // Fallback 1: on-disk KB search API
+        try {
+          const kb = await fetch('/api/kb/query', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query: q, k: 5 }) });
+          if (kb.ok) {
+            const kd = await kb.json();
+            const kres: Array<{ file: string; idx: number; score: number; snippet: string }> = kd?.results || [];
+            if (kres.length) {
+              const lines = kres.map((r, i) => `${i + 1}. ${r.file} — ${r.snippet}`);
+              return `Here’s what I found:\n${lines.join('\n')}`;
+            }
+          }
+        } catch {}
+        return `I couldn't find anything relevant for "${q}". Try rephrasing your question.`;
+      }
       // Fallback: compact list of titles only
       const lines = hits.map((h, i) => `${i + 1}. ${(h.title || h.url)}`);
       return `Here are related sources:\n${lines.join('\n')}`;
